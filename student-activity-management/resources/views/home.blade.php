@@ -9,56 +9,6 @@
     <!-- Link CSS -->
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
-    <style>
-        body {
-            background: linear-gradient(135deg, #f06, #f9a);
-            color: #fff;
-            font-family: Arial, sans-serif;
-        }
-
-        .card {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            border-bottom: none;
-        }
-
-        .card-body {
-            text-align: center;
-        }
-
-        .btn-primary {
-            background-color: #ff4d4d;
-            border-color: #ff4d4d;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: #ff1a1a;
-            border-color: #ff1a1a;
-        }
-
-        .login-link {
-            color: #fff;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .login-link:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
     <div id="app" class="d-flex align-items-center justify-content-center vh-100">

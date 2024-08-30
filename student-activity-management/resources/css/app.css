@@ -1,0 +1,51 @@
+body {
+    background: url('/storage/images/background.png') no-repeat center center fixed;
+    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: none;
+    color: #ffdd00; /* Màu vàng để nổi bật */
+}
+
+.card-body {
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #28a745; /* Xanh lá để phù hợp với chủ đề hoạt động đoàn */
+    border-color: #28a745;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.login-link {
+    color: #ffdd00; /* Màu vàng cho liên kết đăng nhập */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
