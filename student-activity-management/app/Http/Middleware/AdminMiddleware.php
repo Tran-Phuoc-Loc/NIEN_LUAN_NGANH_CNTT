@@ -10,10 +10,11 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        // kiểm tra phải là admin không
         if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
         }
 
-        return redirect('/home'); // Hoặc một trang khác nếu không phải admin
+        return redirect('/home'); // về trang chủ
     }
 }
