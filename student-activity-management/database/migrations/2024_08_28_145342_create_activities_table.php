@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->date('date');
+            $table->string('name'); // Tên hoạt động
+            $table->text('description')->nullable(); // Mô tả hoạt động
+            $table->date('date'); // Ngày tổ chức
+            $table->string('location'); // Địa điểm tổ chức
             $table->timestamps();
         });
+        
     }
 
     /**

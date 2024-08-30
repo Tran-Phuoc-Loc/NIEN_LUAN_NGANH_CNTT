@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('student_id')->unique();
+            $table->string('student_id')->unique(); // Mã số sinh viên
+            $table->string('name'); // Tên sinh viên
+            $table->string('email')->unique(); // Email
+            $table->string('phone')->nullable(); // Số điện thoại
+            $table->string('class'); // Lớp
+            $table->string('department'); // Khoa
             $table->timestamps();
         });
+        
     }
 
     /**
