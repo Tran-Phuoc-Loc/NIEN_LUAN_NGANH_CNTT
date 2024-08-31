@@ -16,16 +16,17 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Routes cho admin và user
-// Route::middleware(['auth', 'admin'])->group(function () {
-//     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-// });
 
-Route::get('/admin/dashboard', [AdminController::class, 'showDashboard']);
 
 
 Route::middleware('auth')->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
+Route::middleware('auth')->group(function () {
+    Route::get('student/dashboard', [StudentController::class, 'studentDashboard'])->name('student.dashboard');
+    Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+});
+
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)
 Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên route này nếu nó đại diện cho trang chính không yêu cầu auth

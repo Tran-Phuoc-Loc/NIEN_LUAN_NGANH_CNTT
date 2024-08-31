@@ -41,10 +41,16 @@ class LoginController extends Controller
     {
         if ($user->role == 'admin') {
             return redirect()->route('admin.dashboard');
-        }
+        } elseif ($user->role == 'user') {
+            return redirect()->route('student.dashboard');
+        } else {
+            // Redirect đến trang mặc định nếu không phải sinh viên hoặc admin
+            return redirect()->route('home');
 
-        return redirect('/home'); // Hoặc trang chính cho người dùng thông thường
+            return redirect('/home'); // Hoặc trang chính cho người dùng thông thường
+        }
     }
+
     // Xử lý đăng xuất
     public function logout(Request $request)
     {

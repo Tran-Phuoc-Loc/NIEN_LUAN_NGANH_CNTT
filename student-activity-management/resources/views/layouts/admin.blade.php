@@ -49,13 +49,16 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('students.index') }}">Students</a>
+                                <a class="nav-link" href="{{ route('students.index') }}">Sinh Viên</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('activities.index') }}">Activities</a>
+                                <a class="nav-link" href="{{ route('activities.index') }}">Quản lý Hoạt động</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('registrations.index') }}">Registrations</a>
+                                <a class="nav-link" href="{{ route('registrations.index') }}">Quản lý Thành viên</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('registrations.index') }}">Báo cáo</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
