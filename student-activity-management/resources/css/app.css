@@ -1,10 +1,3 @@
-body {
-    background: url('/storage/images/background.png') no-repeat center center fixed;
-    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
-
 .card {
     background-color: rgba(0, 0, 0, 0.6);
     border: none;

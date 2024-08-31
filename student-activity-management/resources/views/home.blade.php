@@ -11,7 +11,14 @@
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
 </head>
-
+<style>
+    body {
+    background: url('/storage/images/background.png') no-repeat center center fixed;
+    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+</style>
 <body>
     <div id="app" class="d-flex align-items-center justify-content-center vh-100">
         <div class="container">

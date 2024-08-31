@@ -45,10 +45,12 @@ class LoginController extends Controller
 
         return redirect('/home'); // Hoặc trang chính cho người dùng thông thường
     }
-        // Xử lý đăng xuất
-        public function logout(Request $request)
-        {
-            Auth::logout();
-            return redirect('/login'); // Hoặc bất kỳ trang nào khác sau khi đăng xuất
-        }
+    // Xử lý đăng xuất
+    public function logout(Request $request)
+    {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        Auth::logout();
+        return redirect('/login'); // Hoặc bất kỳ trang nào khác sau khi đăng xuất
+    }
 }

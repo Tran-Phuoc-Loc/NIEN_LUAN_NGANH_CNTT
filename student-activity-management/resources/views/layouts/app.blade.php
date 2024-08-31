@@ -9,6 +9,14 @@
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
 </head>
+<style>
+    body {
+    background: url('/storage/images/background.png') no-repeat center center fixed;
+    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+</style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{{ url('/') }}">Hoạt động đoàn/hội</a>
