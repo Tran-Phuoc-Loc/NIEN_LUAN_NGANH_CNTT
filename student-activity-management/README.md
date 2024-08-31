@@ -17,7 +17,7 @@
 1. **Clone repository**:
    ```bash
    git clone https://github.com/Tran-Phuoc-Loc/NIEN_LUAN_NGANH_CNTT.git
-   cd forum
+   cd student-activity-management 
 2. **Cài đặt các phụ thuộc PHP**:
    - **Hướng dẫn**: Cần cài đặt Composer để chạy được [tải Composer chính thức ở đây](https://getcomposer.org/download/) bạn có thể tìm hiểu thêm về Composer.
    ```bash
