@@ -17,6 +17,9 @@
                     <th>Tên</th>
                     <th>Email</th>
                     <th>Mã sinh viên</th>
+                    <th>Phone</th>
+                    <th>Lớp</th>
+                    <th>Khoa</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,6 +29,9 @@
                         <td>{{ $student->name }}</td>
                         <td>{{ $student->email }}</td>
                         <td>{{ $student->student_id }}</td>
+                        <td>{{ $student->phone }}</td>
+                        <td>{{ $student->class }}</td>
+                        <td>{{ $student->department }}</td>
                     </tr>
                 @endforeach
             </tbody>
