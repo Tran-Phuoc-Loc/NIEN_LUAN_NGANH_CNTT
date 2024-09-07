@@ -139,7 +139,7 @@
         <nav>
             <h1>Quản lý Hoạt động Đoàn/Hội</h1>
             <ul>
-                <li><a href="{{ route('login') }}">Trang chủ</a></li>
+                <li><a href="{{ route('student.dashboard') }}">Trang chủ</a></li>
                 <li><a href="{{ route('activities.index') }}">Hoạt động</a></li>
                 <li><a href="#">Thông báo</a></li>
                 <li class="nav-item">

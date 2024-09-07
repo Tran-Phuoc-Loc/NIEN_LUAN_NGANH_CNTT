@@ -11,11 +11,6 @@ class StudentController extends Controller
     {
         return view('student.dashboard');
     }
-    public function studentDashboard()
-    {
-        // trả về student
-        return view('student.dashboard');
-    }
     public function dashboard()
     {
         // Lấy thông tin người dùng hiện tại
