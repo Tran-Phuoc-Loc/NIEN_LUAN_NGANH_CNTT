@@ -194,9 +194,13 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
+                            <!-- Chỉ admin mới thấy được -->
+                            @if(Auth::check() && Auth::user()->role === 'admin')
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('students.index') }}">Sinh Viên</a>
+                                <a class="nav-link" href="{{ route('admin.students') }}">Quản lý sinh viên</a>
                             </li>
+                            @endif
+
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('activities.index') }}">Quản lý Hoạt động</a>
                             </li>

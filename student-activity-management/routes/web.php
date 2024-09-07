@@ -19,6 +19,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 // Route cho admin với middleware kiểm tra vai trò admin
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
 });
 
 Route::middleware('auth')->group(function () {
@@ -31,6 +32,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên route này nếu nó đại diện cho trang chính không yêu cầu auth
 
 // Các route khác
-Route::resource('students', StudentController::class);
+
 Route::resource('activities', ActivityController::class);
 Route::resource('registrations', RegistrationController::class);
