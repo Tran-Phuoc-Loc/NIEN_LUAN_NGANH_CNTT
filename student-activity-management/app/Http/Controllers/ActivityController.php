@@ -25,6 +25,8 @@ class ActivityController extends Controller
             'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
+            'registration_start' => 'nullable|date',
+            'registration_end' => 'nullable|date',
         ]);
 
         Activity::create($request->all());
@@ -45,6 +47,8 @@ class ActivityController extends Controller
             'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
+            'registration_start' => 'nullable|date',
+            'registration_end' => 'nullable|date',
         ]);
 
         $activity = Activity::findOrFail($id);

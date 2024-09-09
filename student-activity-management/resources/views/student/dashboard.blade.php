@@ -137,7 +137,7 @@
 <body>
     <header>
         <nav>
-            <h1>Quản lý Hoạt động Đoàn/Hội</h1>
+            <h1>Tham gia Hoạt động Đoàn/Hội</h1>
             <ul>
                 <li><a href="{{ route('student.dashboard') }}">Trang chủ</a></li>
                 <li><a href="{{ route('activities.index') }}">Hoạt động</a></li>

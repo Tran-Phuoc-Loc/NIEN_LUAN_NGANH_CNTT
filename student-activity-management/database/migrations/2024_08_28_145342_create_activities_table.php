@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable(); // Mô tả hoạt động
             $table->date('date'); // Ngày tổ chức
             $table->string('location'); // Địa điểm tổ chức
+            $table->date('registration_start')->nullable(); // Ngày bắt đầu đăng ký
+            $table->date('registration_end')->nullable(); // Ngày kết thúc đăng ký
             $table->timestamps();
         });
         

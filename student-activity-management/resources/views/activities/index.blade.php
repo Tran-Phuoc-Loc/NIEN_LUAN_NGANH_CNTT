@@ -8,9 +8,11 @@
         <thead>
             <tr>
                 <th>Tên hoạt động</th>
-                <th>Mô tả</th>
+                <th>Mô tả hoạt động</th>
                 <th>Ngày</th>
                 <th>Địa điểm</th>
+                <th>Ngày bắt đầu đăng ký</th>
+                <th>Ngày kết thúc đăng ký</th>
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -21,6 +23,8 @@
                 <td>{{ $activity->description }}</td> // Mô tả hoạt động
                 <td>{{ $activity->date }}</td> // Ngày tổ chức
                 <td>{{ $activity->location }}</td> // Địa điểm tổ chức
+                <td>{{ $activity->registration_start }}</td> // Ngày bắt đầu đăng ký
+                <td>{{ $activity->registration_end }}</td> // Ngày kết thúc đăng ký
                 <td>
                     <a href="{{ route('activities.edit', $activity->id) }}" class="btn btn-warning">Sửa</a>
                     <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" style="display:inline;">
