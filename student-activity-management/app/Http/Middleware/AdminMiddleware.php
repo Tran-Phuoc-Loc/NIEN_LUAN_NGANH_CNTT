@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
-        /**
+    /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
@@ -20,9 +20,12 @@ class AdminMiddleware
         if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
         }
+        // Chặn truy cập vào tất cả các route của admin
+        if ($request->is('admin/*')) {
+            abort(403, 'Bạn không có quyền truy cập trang này.');
+        }
 
         // Nếu không phải admin, chuyển hướng đến trang khác hoặc hiển thị thông báo lỗi
         return redirect('/student/dashboard')->with('error', 'Bạn không có quyền truy cập.');
     }
-    
 }
