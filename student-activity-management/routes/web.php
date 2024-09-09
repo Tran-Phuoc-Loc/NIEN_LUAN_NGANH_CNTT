@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\ProfileController;
 
 // Route cho login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -26,8 +27,8 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
 Route::middleware('auth')->group(function () {
     Route::get('student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 });
-
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)
 Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên route này nếu nó đại diện cho trang chính không yêu cầu auth

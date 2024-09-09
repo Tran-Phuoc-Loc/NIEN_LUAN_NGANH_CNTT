@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('student'); // 'student' or 'admin'
+            $table->string('role')->default('user'); // 'student' or 'admin'
             $table->string('student_id')->nullable(); // Dành cho sinh viên
             $table->timestamps();
         });
