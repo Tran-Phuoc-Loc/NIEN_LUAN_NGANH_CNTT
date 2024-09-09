@@ -22,6 +22,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
 });
 
+// Route với vai trò người dùng
 Route::middleware('auth')->group(function () {
     Route::get('student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
