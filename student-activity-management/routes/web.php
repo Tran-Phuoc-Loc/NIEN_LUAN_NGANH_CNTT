@@ -23,11 +23,15 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
 });
 
+Route::resource('registrations', RegistrationController::class);
 // Route với vai trò người dùng
 Route::middleware('auth')->group(function () {
     Route::get('student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    // Hiển thị form đăng ký cho hoạt động
+    Route::get('/registrations/create/{id}', [RegistrationController::class, 'create'])->name('registrations.create');
+    Route::post('registrations/store/{id}', [RegistrationController::class, 'store'])->name('registrations.store');
 });
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)
@@ -36,4 +40,3 @@ Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên r
 // Các route khác
 
 Route::resource('activities', ActivityController::class);
-Route::resource('registrations', RegistrationController::class);

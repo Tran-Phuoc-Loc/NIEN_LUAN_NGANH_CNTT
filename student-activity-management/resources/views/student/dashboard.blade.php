@@ -16,7 +16,7 @@
                     <h3>{{ $activity->name }}</h3>
                     <p>Ngày: {{ $activity->date }}</p>
                     <p>Địa điểm: {{ $activity->location }}</p>
-                    <a href="#" class="btn">Đăng ký tham gia</a>
+                    <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn">Đăng ký tham gia</a>
                 </div>
                 @endforeach
                 @endif

@@ -22,4 +22,9 @@ class Student extends Model
     {
         return $this->belongsTo(User::class, 'student_id', 'student_id');
     }
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class, 'user_id', 'id');
+    }
 }

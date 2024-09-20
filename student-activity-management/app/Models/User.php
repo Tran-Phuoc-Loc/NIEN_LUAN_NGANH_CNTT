@@ -25,10 +25,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // Mối quan hệ với bảng students (nếu có)
+    // Mối quan hệ với bảng students 
     public function student()
     {
         return $this->hasOne(Student::class, 'student_id', 'student_id');
     }
-}
 
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
+}
