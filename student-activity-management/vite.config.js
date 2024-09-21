@@ -8,4 +8,5 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    logLevel: 'error', // Chỉ hiển thị lỗi
 });

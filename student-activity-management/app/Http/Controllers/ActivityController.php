@@ -64,4 +64,13 @@ class ActivityController extends Controller
 
         return redirect()->route('activities.index')->with('success', 'Hoạt động đã được xóa.');
     }
+
+    public function show($id)
+    {
+        // Tìm hoạt động theo ID
+        $activity = Activity::findOrFail($id);
+
+        // Trả về view hiển thị chi tiết hoạt động
+        return view('activities.show', compact('activity'));
+    }
 }

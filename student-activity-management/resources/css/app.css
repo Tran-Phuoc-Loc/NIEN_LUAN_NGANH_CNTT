@@ -1,3 +1,65 @@
+/* Cài đặt chung */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+/* Container chính */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: #1a237e;
+    color: #fff;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Điều hướng */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-link {
+    color: #fff;
+    padding: 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Lưới */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Thẻ Card */
 .card {
     background-color: rgba(0, 0, 0, 0.6);
     border: none;
@@ -6,6 +68,7 @@
 }
 
 .card-header {
+    background: #3f51b5;
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
@@ -17,6 +80,32 @@
     text-align: center;
 }
 
+/* Nội dung hoạt động và thông báo */
+.activity,
+.notification {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* Nút */
+.btn {
+    display: inline-block;
+    background: #3f51b5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #283593;
+}
+
+/* Nút chính */
 .btn-primary {
     background-color: #28a745; /* Xanh lá để phù hợp với chủ đề hoạt động đoàn */
     border-color: #28a745;
@@ -32,6 +121,56 @@
     border-color: #1e7e34;
 }
 
+/* Biểu đồ */
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    padding: 10px 0;
+}
+
+.bar-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bar {
+    width: 30px;
+    background-color: #3f51b5;
+    margin: 0 5px;
+}
+
+.bar-label {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/* Thông báo */
+.notification.info {
+    border-left: 4px solid #2196F3;
+}
+
+.notification.success {
+    border-left: 4px solid #4CAF50;
+}
+
+/* Bảng */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+h5 a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+h5 a:hover {
+    text-decoration: underline;
+}
+
+/* Liên kết đăng nhập */
 .login-link {
     color: #ffdd00; /* Màu vàng cho liên kết đăng nhập */
     font-weight: bold;
@@ -41,4 +180,3 @@
 .login-link:hover {
     text-decoration: underline;
 }
-

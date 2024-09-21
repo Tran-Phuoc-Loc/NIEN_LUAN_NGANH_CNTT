@@ -40,3 +40,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên r
 // Các route khác
 
 Route::resource('activities', ActivityController::class);
+
+// Route để hiển thị chi tiết một hoạt động cụ thể
+Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show');

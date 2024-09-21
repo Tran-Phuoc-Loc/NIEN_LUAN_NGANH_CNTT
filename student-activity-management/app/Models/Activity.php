@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Activity extends Model
 {
     use HasFactory;
+    
     // Ngăn chặn cuộc tấn công "gán giá trị hàng loạt" chỉ cho phép những giá trị trong $fillable
     protected $fillable = [
         'name',
@@ -18,8 +19,16 @@ class Activity extends Model
         'registration_end',
     ];
 
+    // Ép kiểu các thuộc tính thành datetime
+    protected $casts = [
+        'date' => 'datetime',
+        'registration_start' => 'datetime',
+        'registration_end' => 'datetime',
+    ];
+
     public function registrations()
     {
         return $this->hasMany(Registration::class);
     }
 }
+
