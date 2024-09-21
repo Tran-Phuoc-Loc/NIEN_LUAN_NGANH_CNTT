@@ -44,7 +44,7 @@
                     <p>Ngày: 02/09/2024</p>
                     <p>Số người tham gia: 80</p>
                 </div>
-                <a href="{{ route('activities.index') }}" class="btn btn-primary w-100">Xem tất cả hoạt động</a>
+                <a href="{{ route('admin.activities.index') }}" class="btn btn-primary w-100">Xem tất cả hoạt động</a>
             </div>
         </div>
         

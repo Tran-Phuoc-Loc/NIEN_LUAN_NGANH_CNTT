@@ -5,14 +5,18 @@
     <h2>{{ $activity->name }}</h2>
     <p><strong>Ngày:</strong> {{ $activity->date->format('d/m/Y') }}</p>
     <p><strong>Địa điểm:</strong> {{ $activity->location }}</p>
-    <p><strong>Mô tả:</strong> {{ $activity->description }}</p>
-    <p>🗓️ Hãy chuẩn bị sẵn sàng để tham gia sự kiện thú vị này! Chúng ta sẽ có những trải nghiệm tuyệt vời cùng nhau!</p>
     
-    <h4>📜 Quyền lợi khi tham gia:</h4>
-    <ul>
-        <li>✅ Được cộng điểm rèn luyện và xét tiêu chí Hội nhập tốt của phong trào SV5T.</li>
-        <li>🏆 Xét khen thưởng cho chi đoàn có số lượng đoàn viên tham gia trên 90% và cộng 50% số điểm khen thưởng cho tất cả đoàn viên.</li>
-    </ul>
+    @if($activity->description)
+        <p><strong>Mô tả:</strong></p>
+        <div style="white-space: pre-wrap;">{{ $activity->description }}</div>
+    @endif
+
+    <p>🗓️ Hãy chuẩn bị sẵn sàng để tham gia sự kiện thú vị này! Chúng ta sẽ có những trải nghiệm tuyệt vời cùng nhau!</p>
+
+    @if($activity->benefits)
+        <h4>📜 Quyền lợi khi tham gia:</h4>
+        <div style="white-space: pre-wrap;">{{ $activity->benefits }}</div>
+    @endif
 
     @if(now()->between($activity->registration_start, $activity->registration_end))
         <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn">Đăng ký tham gia ngay!</a>

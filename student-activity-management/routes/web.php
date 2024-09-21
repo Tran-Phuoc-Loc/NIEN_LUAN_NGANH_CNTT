@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminActivityController;
 
 // Route cho login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -21,25 +22,32 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
+    Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
+    Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
+    Route::post('/admin/activities', [AdminActivityController::class, 'store'])->name('admin.activities.store');
+    Route::get('/admin/activities/edit/{id}', [AdminActivityController::class, 'edit'])->name('admin.activities.edit');
+    Route::put('/admin/activities/{id}', [AdminActivityController::class, 'update'])->name('admin.activities.update');
+    Route::delete('/admin/activities/{id}', [AdminActivityController::class, 'destroy'])->name('admin.activities.destroy');
 });
 
 Route::resource('registrations', RegistrationController::class);
 // Route với vai trò người dùng
 Route::middleware('auth')->group(function () {
-    Route::get('student/dashboard', [StudentController::class, 'index'])->name('student.dashboard');
+    // Route cho Dashboard
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    
+    // Route cho Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    // Hiển thị form đăng ký cho hoạt động
+
+    // Route cho Đăng ký hoạt động
     Route::get('/registrations/create/{id}', [RegistrationController::class, 'create'])->name('registrations.create');
     Route::post('registrations/store/{id}', [RegistrationController::class, 'store'])->name('registrations.store');
+
+    // Route cho hoạt động
+    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+    Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show'); // Route để hiển thị chi tiết một hoạt động cụ thể
 });
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)
 Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên route này nếu nó đại diện cho trang chính không yêu cầu auth
 
-// Các route khác
-
-Route::resource('activities', ActivityController::class);
-
-// Route để hiển thị chi tiết một hoạt động cụ thể
-Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show');
