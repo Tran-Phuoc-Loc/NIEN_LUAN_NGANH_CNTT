@@ -51,6 +51,47 @@ nav ul li a {
     font-weight: 500;
 }
 
+/* Statistic Grid */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.stat-item {
+    background: #e3f2fd;
+    padding: 20px;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.stat-item:hover {
+    background: #bbdefb;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1e88e5;
+}
+
+.activity-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px 0;
+    transition: padding-left 0.3s ease;
+}
+
+.activity-item:hover {
+    padding-left: 10px;
+    background-color: #e3f2fd;
+    border-radius: 5px;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
 /* Lưới */
 .grid {
     display: grid;

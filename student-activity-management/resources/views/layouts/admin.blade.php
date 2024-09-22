@@ -15,60 +15,25 @@
 </head>
 <style>
     body {
-        font-family: 'Roboto', sans-serif;
         background-color: #f4f7fc;
-        margin: 0;
-        padding: 0;
-        color: #333;
     }
 
     .container {
-        max-width: 1200px;
         margin: 40px auto;
         padding: 0 20px;
     }
 
     header {
         background: #1e88e5;
-        color: #fff;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    nav ul {
-        list-style-type: none;
-        padding: 0;
-        display: flex;
-    }
-
-    nav ul li {
-        margin-right: 20px;
     }
 
     nav ul li a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: 500;
         font-size: 16px;
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 30px;
-        margin-top: 30px;
     }
 
     /* Card Styles */
     .card {
         background: #fff;
-        border-radius: 10px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         overflow: hidden;
         transition: transform 0.3s ease;
@@ -82,8 +47,6 @@
         background: #1e88e5;
         color: white;
         padding: 20px;
-        font-size: 18px;
-        font-weight: bold;
         border-bottom: 1px solid #e0e0e0;
         text-align: center;
     }
@@ -92,56 +55,9 @@
         padding: 20px;
     }
 
-    /* Statistic Grid */
-    .stat-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        text-align: center;
-    }
-
-    .stat-item {
-        background: #e3f2fd;
-        padding: 20px;
-        border-radius: 10px;
-        transition: background 0.3s ease;
-    }
-
-    .stat-item:hover {
-        background: #bbdefb;
-    }
-
-    .stat-number {
-        font-size: 28px;
-        font-weight: bold;
-        color: #1e88e5;
-    }
-
-    .activity-item {
-        border-bottom: 1px solid #e0e0e0;
-        padding: 15px 0;
-        transition: padding-left 0.3s ease;
-    }
-
-    .activity-item:hover {
-        padding-left: 10px;
-        background-color: #e3f2fd;
-        border-radius: 5px;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
     .btn {
-        display: inline-block;
         background: #1e88e5;
-        color: white;
         padding: 10px 20px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-size: 16px;
-        transition: background 0.3s;
         text-align: center;
         margin-top: 10px;
     }
