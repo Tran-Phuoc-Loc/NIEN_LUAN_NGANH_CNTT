@@ -27,7 +27,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::post('/admin/activities', [AdminActivityController::class, 'store'])->name('admin.activities.store');
     Route::get('/admin/activities/edit/{id}', [AdminActivityController::class, 'edit'])->name('admin.activities.edit');
     Route::put('/admin/activities/{id}', [AdminActivityController::class, 'update'])->name('admin.activities.update');
-    Route::delete('/admin/activities/{id}', [AdminActivityController::class, 'destroy'])->name('admin.activities.destroy');
+    Route::patch('/admin/activities/{id}/destroy-or-hide', [AdminActivityController::class, 'destroyOrHide'])->name('admin.activities.destroyOrHide');
 });
 
 Route::resource('registrations', RegistrationController::class);

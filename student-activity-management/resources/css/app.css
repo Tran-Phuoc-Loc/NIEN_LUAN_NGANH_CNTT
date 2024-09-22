@@ -180,3 +180,25 @@ h5 a:hover {
 .login-link:hover {
     text-decoration: underline;
 }
+
+/* phần chọn option của admin */
+.form-select {
+    width: auto; /* Đặt độ rộng tự động, có thể thay đổi thành 100% nếu cần */
+    padding: 10px; /* Thêm khoảng cách bên trong */
+    border: 1px solid #ced4da; /* Đường viền nhẹ */
+    border-radius: 5px; /* Bo góc */
+    background-color: #859ce8; /* Màu nền */
+    font-size: 16px; /* Kích thước font */
+    color: #ffffff; /* Màu chữ */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+.form-select:focus {
+    border-color: #046ddf; /* Màu viền khi chọn */
+    outline: none; /* Bỏ viền ngoài */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Hiệu ứng bóng */
+}
+
+.form-select option {
+    padding: 10px; /* Khoảng cách cho các tùy chọn */
+}

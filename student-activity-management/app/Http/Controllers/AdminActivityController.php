@@ -70,12 +70,24 @@ class AdminActivityController extends Controller
         return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được thêm thành công!');
     }
 
-    // Xóa hoạt động
-    public function destroy($id)
+    // Xóa hoạt động hoặc Ẩn 
+    public function destroyOrHide(Request $request, $id)
     {
         $activity = Activity::findOrFail($id);
-        $activity->delete();
 
-        return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được xóa thành công!');
+        if ($request->action === 'hide') {
+            $activity->is_hidden = true; // Đánh dấu là ẩn
+            $activity->save();
+            return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được ẩn thành công!');
+        } elseif ($request->action === 'delete') {
+            $activity->delete(); // Xóa hoàn toàn
+            return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được xóa thành công!');
+        } elseif ($request->action === 'show') {
+            $activity->is_hidden = false; // Đánh dấu là hiện lại
+            $activity->save();
+            return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được hiển thị lại thành công!');
+        }
+
+        return redirect()->route('admin.activities.index')->with('error', 'Hành động không hợp lệ!');
     }
 }

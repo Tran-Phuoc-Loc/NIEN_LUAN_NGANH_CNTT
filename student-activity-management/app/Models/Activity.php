@@ -18,6 +18,7 @@ class Activity extends Model
         'registration_start',
         'registration_end',
         'benefits', 
+        'is_hidden',
     ];
 
     // Ép kiểu các thuộc tính thành datetime
