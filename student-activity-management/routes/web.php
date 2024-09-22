@@ -22,12 +22,17 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
+
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
     Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
     Route::post('/admin/activities', [AdminActivityController::class, 'store'])->name('admin.activities.store');
     Route::get('/admin/activities/edit/{id}', [AdminActivityController::class, 'edit'])->name('admin.activities.edit');
     Route::put('/admin/activities/{id}', [AdminActivityController::class, 'update'])->name('admin.activities.update');
     Route::patch('/admin/activities/{id}/destroy-or-hide', [AdminActivityController::class, 'destroyOrHide'])->name('admin.activities.destroyOrHide');
+
+    Route::get('/admin/managers', [AdminController::class, 'showUsers'])->name('admin.managers.index');
+    Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
+    Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 });
 
 Route::resource('registrations', RegistrationController::class);

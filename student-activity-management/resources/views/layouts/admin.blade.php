@@ -121,7 +121,7 @@
                                 <a class="nav-link" href="{{ route('admin.activities.index') }}">Quản lý Hoạt động</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('registrations.index') }}">Quản lý Thành viên</a>
+                                <a class="nav-link" href="{{ route('admin.managers.index') }}">Quản lý Thành viên</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('registrations.index') }}">Báo cáo</a>
