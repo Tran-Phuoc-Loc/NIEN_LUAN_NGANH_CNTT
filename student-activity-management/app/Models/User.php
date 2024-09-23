@@ -35,4 +35,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Registration::class);
     }
+
+    // Khi user bị xóa, xóa luôn student liên quan
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->student()->delete();  // Xóa student liên quan
+        });
+    }
 }

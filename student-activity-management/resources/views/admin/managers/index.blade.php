@@ -5,12 +5,14 @@
     <h1>Quản lý Quản lý</h1>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+    <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+
+    <a href="{{ route('admin.managers.create') }}" class="btn btn-success mb-3">Thêm Sinh Viên</a>
 
     <table class="table">
         <thead>
@@ -36,10 +38,10 @@
                     </form>
                 </td>
                 <td>
-                    <form action="{{ route('admin.managers.destroy', $user->id) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('admin.managers.destroy', $user->id) }}" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Xóa</button>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Xóa</button>
                     </form>
                 </td>
             </tr>

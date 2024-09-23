@@ -25,10 +25,25 @@
                             {{ $activity->name }}
                         </a>
                     </h3>
-                    <p>Ngày diễn ra: {{ $activity->date->format('d/m/Y') }}</p>
-                    <p>Địa điểm: {{ $activity->location }}</p>
-                    <p><strong>Thời gian đăng ký:</strong> {{ $activity->registration_start->format('d/m/Y') }} đến {{ $activity->registration_end->format('d/m/Y') }}</p>
-                    <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn">Đăng ký tham gia</a>
+                    <p>Ngày diễn ra: <strong>{{ $activity->date->format('d/m/Y') }}</strong></p>
+                    <p>Địa điểm: <strong>{{ $activity->location }}</strong></p>
+                    <p>
+                        <strong>Thời gian đăng ký:</strong>
+                        {{ $activity->registration_start->format('d/m/Y') }}
+                        đến
+                        {{ $activity->registration_end->format('d/m/Y') }}
+                    </p>
+                    @if($activity->registration_start <= now() && $activity->registration_end >= now())
+                        <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn">Đăng ký tham gia</a>
+                        @else
+                        <button class="btn btn-secondary" disabled>
+                            @if($activity->registration_start > now())
+                            Chưa đến thời gian đăng ký
+                            @else
+                            Hết hạn đăng ký
+                            @endif
+                        </button>
+                        @endif
                 </div>
                 @endforeach
                 <p><a href="{{ route('activities.index') }}">Xem tất cả hoạt động</a></p> <!-- Liên kết đến trang hoạt động -->

@@ -35,6 +35,7 @@
    ```bash
    php artisan make:seeder AdminSeeder
    php artisan make:seeder UserSeeder
+   php artisan make:seeder ActivitySeefer
    php artisan db:seed
    
 7. **Chạy migrations để tạo các bảng trong cơ sở dữ liệu**:

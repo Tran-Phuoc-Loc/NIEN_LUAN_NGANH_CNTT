@@ -48,17 +48,25 @@
                     <td>
                         @if($activity->registration_end && $activity->registration_end < now())
                             <span class="badge bg-danger">Đã hết hạn đăng ký</span>
+                            @elseif($activity->registration_start && $activity->registration_start > now())
+                            <span class="badge bg-success">Chưa đến thời gian đăng ký</span>
                             @else
                             <span class="badge bg-success">Còn hạn đăng ký</span>
                             @endif
                     </td>
 
                     <td>
-                        @if($activity->registration_end && $activity->registration_end >= now())
-                        <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-primary">Đăng ký tham gia</a>
-                        @else
-                        <button class="btn btn-secondary" disabled>Hết hạn đăng ký</button>
-                        @endif
+                        @if($activity->registration_start && $activity->registration_start <= now() && $activity->registration_end && $activity->registration_end >= now())
+                            <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-primary">Đăng ký tham gia</a>
+                            @else
+                            <button class="btn btn-secondary" disabled>
+                                @if($activity->registration_start && $activity->registration_start > now())
+                                Chưa đến thời gian đăng ký
+                                @else
+                                Hết hạn đăng ký
+                                @endif
+                            </button>
+                            @endif
                     </td>
                 </tr>
                 @endforeach

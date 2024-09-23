@@ -11,6 +11,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminActivityController;
 
+
 // Route cho login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -21,7 +22,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 // Route cho admin với middleware kiểm tra vai trò admin
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('admin/students', [AdminController::class, 'showStudents'])->name('admin.students');
+    Route::get('admin/managers/students', [AdminController::class, 'showStudents'])->name('admin.students');
 
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
     Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
@@ -31,6 +32,9 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::patch('/admin/activities/{id}/destroy-or-hide', [AdminActivityController::class, 'destroyOrHide'])->name('admin.activities.destroyOrHide');
 
     Route::get('/admin/managers', [AdminController::class, 'showUsers'])->name('admin.managers.index');
+    Route::get('/admin/managers/create', [AdminController::class, 'create'])->name('admin.managers.create');
+    Route::post('admin/managers/import', [AdminController::class, 'import'])->name('admin.managers.import');
+    Route::post('/admin/managers', [AdminController::class, 'store'])->name('admin.managers.store');
     Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 });
