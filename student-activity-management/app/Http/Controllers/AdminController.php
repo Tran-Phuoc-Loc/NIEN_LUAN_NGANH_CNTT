@@ -39,6 +39,14 @@ class AdminController extends Controller
                 ]);
 
                 foreach ($validatedData['student_id'] as $key => $studentId) {
+                    // Lưu vào bảng users
+                    $user = User::create([
+                        'name' => $validatedData['name'][$key],
+                        'email' => $validatedData['email'][$key],
+                        'password' => bcrypt($validatedData['password'][$key]),
+                        'student_id' => $studentId,
+                    ]);
+
                     // Lưu vào bảng students
                     Student::create([
                         'student_id' => $studentId,
@@ -47,14 +55,7 @@ class AdminController extends Controller
                         'phone' => $validatedData['phone'][$key],
                         'class' => $validatedData['class'][$key],
                         'department' => $validatedData['department'][$key],
-                    ]);
-
-                    // Lưu vào bảng users
-                    User::create([
-                        'name' => $validatedData['name'][$key],
-                        'email' => $validatedData['email'][$key],
-                        'password' => bcrypt($validatedData['password'][$key]),
-                        'student_id' => $studentId,
+                        'user_id' => $user->id, // Liên kết với user đã tạo
                     ]);
                 }
             }
@@ -87,6 +88,14 @@ class AdminController extends Controller
                     continue;
                 }
 
+                // Lưu dữ liệu vào bảng users
+                $user = User::create([
+                    'name' => $row[1],
+                    'email' => $row[2],
+                    'password' => bcrypt($row[6]),
+                    'student_id' => $row[0], // Hoặc thêm một trường khóa ngoại cho sinh viên
+                ]);
+
                 // Lưu dữ liệu vào bảng students
                 Student::create([
                     'student_id' => $row[0],
@@ -95,14 +104,7 @@ class AdminController extends Controller
                     'phone' => $row[3],
                     'class' => $row[4],
                     'department' => $row[5],
-                ]);
-
-                // Lưu dữ liệu vào bảng users
-                User::create([
-                    'name' => $row[1],
-                    'email' => $row[2],
-                    'password' => bcrypt($row[6]),
-                    'student_id' => $row[0], // Hoặc thêm một trường khóa ngoại cho sinh viên
+                    'user_id' => $user->id, // Liên kết với user đã tạo
                 ]);
             }
 
@@ -113,16 +115,21 @@ class AdminController extends Controller
     }
 
     // Hiển thị danh sách sinh viên cho admin
-    public function showStudents()
+    public function showStudents(Request $request)
     {
-        // Kiểm tra xem người dùng có quyền admin không
-        $user = Auth::user();
-        if ($user->role !== 'admin') {
-            abort(403, 'lỗi.');
+        $query = Student::query();
+        // Kiểm tra xem có từ khóa tìm kiếm không
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            // Tìm kiếm không phân biệt chữ hoa chữ thường
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
+                ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($search) . '%'])
+                ->orWhereRaw('LOWER(student_id) LIKE ?', ['%' . strtolower($search) . '%']);
         }
 
         // Lấy danh sách sinh viên
-        $students = Student::all();
+        $students = $query->get();
 
         // Trả về view hiển thị danh sách sinh viên
         return view('admin.managers.students', compact('students'));
@@ -137,15 +144,22 @@ class AdminController extends Controller
     // }
 
     // Hiển thị danh sách người dùng
-    public function showUsers()
+    public function showUsers(Request $request)
     {
-        // Kiểm tra xem người dùng có quyền admin không
-        $user = Auth::user();
-        if ($user->role !== 'admin') {
-            abort(403, 'lỗi.');
+        $query = User::query();
+
+        // Kiểm tra từ khóa tìm kiếm
+        if ($request->has('search')) {
+            $search = $request->input('search');
+
+            // Tìm kiếm không phân biệt chữ hoa chữ thường
+            $query->whereRaw("name COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%'])
+                  ->orWhereRaw("email COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%']);
         }
 
-        $users = User::orderByRaw("role = 'admin' DESC")->get(); // Sắp xếp admin lên trên cùng
+        // Lấy danh sách người dùng và sắp xếp admin lên trên cùng
+        $users = $query->orderByRaw("role = 'admin' DESC")->get();
+
         return view('admin.managers.index', compact('users'));
     }
 
@@ -156,11 +170,8 @@ class AdminController extends Controller
             'role' => 'required|in:admin,user',
         ]);
 
-        // Lấy người dùng hiện tại
-        $currentUser = auth()->user();
-
         // Kiểm tra nếu người dùng hiện tại là admin và đang cố gắng tự chuyển xuống vai trò user
-        if ($currentUser->id === $user->id && $request->role === 'user') {
+        if ($user->id && $request->role === 'user') {
             return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể tự chuyển đổi vai trò thành người dùng.');
         }
 
