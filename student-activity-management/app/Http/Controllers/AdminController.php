@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -12,8 +13,14 @@ class AdminController extends Controller
 {
     public function index()
     {
-        // trả về admin
-        return view('admin.dashboard');
+        // Truy xuất dữ liệu từ cơ sở dữ liệu 
+        $totalMembers = User::count();  // Tổng số thành viên 
+        $totalActivities = Activity::count();  // Tổng số hoạt động
+        $visibleActivitiesCount = Activity::where('is_hidden', 0)->count(); // Đếm số hoạt động không ẩn
+        $recentActivities = Activity::where('is_hidden', 0)->orderBy('created_at', 'desc')->take(2)->get();
+
+
+        return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities',));
     }
 
     // Hiển thị form thêm sinh viên
@@ -154,7 +161,7 @@ class AdminController extends Controller
 
             // Tìm kiếm không phân biệt chữ hoa chữ thường
             $query->whereRaw("name COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%'])
-                  ->orWhereRaw("email COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%']);
+                ->orWhereRaw("email COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%']);
         }
 
         // Lấy danh sách người dùng và sắp xếp admin lên trên cùng
