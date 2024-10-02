@@ -7,7 +7,7 @@
     <!-- Form tìm kiếm -->
     <form action="{{ route('admin.issues.send') }}" method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" class="form-control" name="search" placeholder="Tìm kiếm sinh viên" value="{{ request('search') }}" id="studentSearch">
+            <input type="text" class="form-control" name="search" placeholder="Tìm kiếm sinh viên" value="{{ request('search') }}">
             <button class="btn btn-primary" type="submit">Tìm kiếm</button>
         </div>
     </form>
@@ -24,15 +24,13 @@
     </div>
     @endif
 
+    @if (isset($students) && count($students) > 0)
     <form action="{{ route('admin.issues.storeSend') }}" method="POST">
         @csrf
 
         <div class="mb-3">
             <label class="form-label">Chọn Sinh Viên</label>
-
-            <!-- Bảng sinh viên chỉ hiển thị khi có từ khóa tìm kiếm -->
-            @if (request()->has('search') && count($students) > 0)
-            <div id="studentTable" class="table-responsive">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -48,7 +46,7 @@
                         @foreach ($students as $student)
                         <tr>
                             <td>
-                                <input class="form-check-input" type="checkbox" name="student_ids[]" value="{{ $student->id }}" id="student_{{ $student->id }}">
+                                <input class="form-check-input" type="checkbox" name="student_ids[]" value="{{ $student->id }}">
                             </td>
                             <td>{{ $student->student_id }}</td>
                             <td>{{ $student->name }}</td>
@@ -60,9 +58,6 @@
                     </tbody>
                 </table>
             </div>
-            @else
-            <p class="text-center">Không tìm thấy sinh viên nào.</p>
-            @endif
         </div>
 
         <div class="mb-3">
@@ -72,47 +67,8 @@
 
         <button type="submit" class="btn btn-warning w-100">Gửi Thông Báo</button>
     </form>
+    @else
+    <p class="text-center">Không tìm thấy sinh viên nào.</p>
+    @endif
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-$('#studentSearch').on('input', function() {
-    const searchValue = $(this).val().toLowerCase();
-    const studentTable = $('#studentTable');
-    const rows = studentTable.find('tbody tr');
-
-    let hasResults = false;
-
-    rows.each(function() {
-        const studentId = $(this).find('td:nth-child(2)').text().toLowerCase();
-        const studentName = $(this).find('td:nth-child(3)').text().toLowerCase();
-
-        // Nếu từ khóa tìm kiếm khớp với mã sinh viên hoặc tên sinh viên, hiện hàng
-        if (studentId.includes(searchValue) || studentName.includes(searchValue)) {
-            $(this).show();  // Hiện hàng
-            hasResults = true;
-        } else {
-            $(this).hide();  // Ẩn hàng
-        }
-    });
-
-    // Hiển thị bảng nếu có kết quả khớp, ngược lại thì ẩn bảng
-    if (searchValue === '') {
-        studentTable.hide(); // Ẩn bảng nếu không nhập từ khóa tìm kiếm
-    } else {
-        studentTable.toggle(hasResults); // Chỉ hiện bảng khi có kết quả
-    }
-});
-
-// Kiểm tra hiển thị bảng sau khi tải trang
-$(document).ready(function() {
-    const rows = $('#studentTable tbody tr');
-    const hasInitialResults = rows.filter(function() {
-        return $(this).css('display') !== 'none';
-    }).length > 0;
-
-    $('#studentTable').toggle(hasInitialResults);
-});
-
-</script>
 @endsection

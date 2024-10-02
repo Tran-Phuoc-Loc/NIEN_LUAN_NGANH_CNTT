@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <!-- Link Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- Link CSS -->
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
@@ -147,7 +148,47 @@
             </div>
         </main>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+    <script>
+         $(document).ready(function() {
+            $('#studentSearch').on('input', function() {
+                const searchValue = $(this).val().toLowerCase();
+                const studentTable = $('#studentTable');
+                const rows = studentTable.find('tbody tr');
+
+                let hasResults = false;
+
+                rows.each(function() {
+                    const studentId = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    const studentName = $(this).find('td:nth-child(3)').text().toLowerCase();
+
+                    // Nếu từ khóa tìm kiếm khớp với mã sinh viên hoặc tên sinh viên, hiện hàng
+                    if (studentId.includes(searchValue) || studentName.includes(searchValue)) {
+                        $(this).show(); // Hiện hàng
+                        hasResults = true;
+                    } else {
+                        $(this).hide(); // Ẩn hàng
+                    }
+                });
+
+                // Hiển thị bảng nếu có kết quả khớp, ngược lại thì ẩn bảng
+                if (searchValue === '') {
+                    studentTable.hide(); // Ẩn bảng nếu không nhập từ khóa tìm kiếm
+                } else {
+                    studentTable.toggle(hasResults); // Chỉ hiện bảng khi có kết quả
+                }
+            });
+
+            // Kiểm tra hiển thị bảng sau khi tải trang
+            const rows = $('#studentTable tbody tr');
+            const hasInitialResults = rows.filter(function() {
+                return $(this).css('display') !== 'none';
+            }).length > 0;
+
+            $('#studentTable').toggle(hasInitialResults);
+        });
+    </script>
     <script>
         function confirmDelete() {
             if (confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')) {

@@ -37,7 +37,13 @@ class AdminIssueController extends Controller
     }
 
     public function send(Request $request)
-    {        
+    {
+        // Kiểm tra nếu người dùng không nhập từ khóa tìm kiếm
+        if (!$request->has('search') || trim($request->search) === '') {
+            // Trả về view cùng với thông báo lỗi nhưng không chuyển hướng
+            return view('admin.issues.send')->with('error', 'Vui lòng nhập từ khóa tìm kiếm.');
+        }
+
         // Truy vấn sinh viên có vai trò là "student" và lấy dữ liệu từ cả hai bảng
         $query = User::with('student') // Eager load mối quan hệ student
             ->where('role', 'student');
