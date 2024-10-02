@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminActivityController;
+use App\Http\Controllers\AdminIssueController;
 
 
 // Route cho login
@@ -23,6 +24,12 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/managers/students', [AdminController::class, 'showStudents'])->name('admin.students');
+
+    Route::get('admin/issues', [AdminIssueController::class, 'index'])->name('admin.issues.index');
+    Route::get('admin/issues/{id}/resolve', [AdminIssueController::class, 'resolve'])->name('admin.issues.resolve');
+    Route::get('admin/issues/send', [AdminIssueController::class, 'send'])->name('admin.issues.send');
+    Route::post('admin/issues/send', [AdminIssueController::class, 'storeSend'])->name('admin.issues.storeSend');
+
 
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
     Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
@@ -44,7 +51,7 @@ Route::resource('registrations', RegistrationController::class);
 Route::middleware('auth')->group(function () {
     // Route cho Dashboard
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-    
+
     // Route cho Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 
@@ -59,4 +66,3 @@ Route::middleware('auth')->group(function () {
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)
 Route::get('/', [HomeController::class, 'index'])->name('home'); // Giữ tên route này nếu nó đại diện cho trang chính không yêu cầu auth
-

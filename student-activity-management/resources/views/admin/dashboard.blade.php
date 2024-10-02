@@ -48,13 +48,29 @@
         </div>
 
         <div class="card">
-            <div class="card-header bg-success text-white text-center">
+            <div class="card-header bg-warning text-white text-center">
                 Thông báo từ sinh viên
             </div>
             <div class="card-content p-4">
-                <canvas id="activityGrowthChart"></canvas>
-                <p class="text-center mt-3"></p>
+                @if ($studentIssues->isEmpty())
+                <p class="text-center">Không có thông báo từ sinh viên.</p>
+                @else
+                <ul class="list-group">
+                    @foreach ($studentIssues as $issue)
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ $issue->student_name }}:</strong> {{ $issue->message }}
+                            <br><small>Gửi vào ngày: {{ $issue->created_at->format('d/m/Y H:i') }}</small>
+                        </div>
+                        <a href="{{ route('admin.issues.resolve', $issue->id) }}" class="btn btn-sm btn-warning">Xử lý</a>
+                    </li>
+                    @endforeach
+                </ul>
+                @endif
+                <a href="{{ route('admin.issues.index') }}" class="btn btn-warning w-100 mt-3">Xem tất cả thông báo</a>
             </div>
         </div>
+
+
 
         @endsection

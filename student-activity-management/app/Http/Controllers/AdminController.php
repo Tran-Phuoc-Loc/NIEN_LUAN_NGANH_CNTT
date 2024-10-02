@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Activity;
+use App\Models\StudentIssue;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -18,9 +19,10 @@ class AdminController extends Controller
         $totalActivities = Activity::count();  // Tổng số hoạt động
         $visibleActivitiesCount = Activity::where('is_hidden', 0)->count(); // Đếm số hoạt động không ẩn
         $recentActivities = Activity::where('is_hidden', 0)->orderBy('created_at', 'desc')->take(2)->get();
+        $studentIssues = StudentIssue::orderBy('created_at', 'desc')->take(5)->get();
 
 
-        return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities',));
+        return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities', 'studentIssues'));
     }
 
     // Hiển thị form thêm sinh viên

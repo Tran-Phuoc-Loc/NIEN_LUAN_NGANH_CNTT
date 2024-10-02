@@ -28,7 +28,7 @@ class User extends Authenticatable
     // Mối quan hệ với bảng students 
     public function student()
     {
-        return $this->hasOne(Student::class, 'student_id', 'student_id');
+        return $this->hasOne(Student::class, 'user_id');// Liên kết đến bảng students qua user_id
     }
 
     public function registrations()

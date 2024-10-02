@@ -127,6 +127,9 @@
                                 <a class="nav-link" href="{{ route('registrations.index') }}">Báo cáo</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.issues.send') }}">Gửi Thông báo</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                             </li>
                             <!-- Thêm form đăng xuất vào view -->
