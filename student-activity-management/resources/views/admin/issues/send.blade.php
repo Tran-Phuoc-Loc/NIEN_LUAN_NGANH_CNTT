@@ -67,6 +67,8 @@
 
         <button type="submit" class="btn btn-warning w-100">Gửi Thông Báo</button>
     </form>
+        <!-- Liên kết phân trang -->
+        {{ $students->links() }}
     @else
     <p class="text-center">Không tìm thấy sinh viên nào.</p>
     @endif

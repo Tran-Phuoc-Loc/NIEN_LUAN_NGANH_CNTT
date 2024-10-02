@@ -55,7 +55,7 @@ class AdminIssueController extends Controller
                     ->orWhere('student_id', 'like', '%' . $request->search . '%');
             });
         }
-        $students = $query->get();
+        $students = $query->paginate(10);
 
         // Kiểm tra dữ liệu
         if ($students->isEmpty()) {
