@@ -4,6 +4,9 @@
 <div class="container">
     <h2>Danh Sách Người Đăng Ký cho Hoạt Động: {{ $activity->name }}</h2>
 
+    @if($registrations->isEmpty())
+    <p class="text-center text-muted">Hiện tại chưa có ai đăng ký tham gia hoạt động này.</p>
+    @else
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -28,5 +31,6 @@
             @endforeach
         </tbody>
     </table>
+    @endif
 </div>
 @endsection
