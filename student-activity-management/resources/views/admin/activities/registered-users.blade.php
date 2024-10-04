@@ -11,6 +11,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Nhập Điểm Danh</button>
     </form>
+    <td>
+        <a href="{{ route('admin.activities.unregistered-attendances', $activity->id) }}" class="btn btn-warning">Xem DS Điểm Danh Không Đăng Ký</a>
+    </td>
 
 
     @if($registrations->isEmpty())

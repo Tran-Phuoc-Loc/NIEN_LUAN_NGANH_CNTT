@@ -48,7 +48,9 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 
     Route::post('/admin/activities/{id}/registrations/import-attendance', [AdminRegistrationController::class, 'importAttendance'])
-    ->name('admin.registrations.importAttendance');
+        ->name('admin.registrations.importAttendance');
+    Route::get('/admin/activities/{id}/unregistered-attendances', [AdminActivityController::class, 'showUnregisteredAttendances'])
+        ->name('admin.activities.unregistered-attendances');
 });
 
 Route::resource('registrations', RegistrationController::class);

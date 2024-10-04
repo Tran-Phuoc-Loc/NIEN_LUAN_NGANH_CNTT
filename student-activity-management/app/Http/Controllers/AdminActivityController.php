@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use App\Models\UnregisteredAttendance;
+use App\Models\Registration;
 
 class AdminActivityController extends Controller
 {
@@ -99,5 +101,18 @@ class AdminActivityController extends Controller
         $registrations = $activity->registrations;
 
         return view('admin.activities.registered-users', compact('activity', 'registered_users', 'registrations'));
+    }
+
+    public function showUnregisteredAttendances($activityId)
+    {
+        // Lấy tất cả sinh viên đã điểm danh và đã đăng ký
+        $registeredStudents = Registration::where('activity_id', $activityId)->pluck('student_id')->toArray();
+
+        // Lấy tất cả sinh viên không đăng ký từ bảng unregistered_attendances mà chưa điểm danh
+        $unregisteredAttendances = UnregisteredAttendance::where('activity_id', $activityId)
+            ->whereNotIn('student_id', $registeredStudents)
+            ->get();
+
+        return view('admin.activities.unregistered_attendances', compact('unregisteredAttendances'));
     }
 }
