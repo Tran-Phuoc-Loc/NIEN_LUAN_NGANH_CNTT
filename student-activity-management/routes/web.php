@@ -47,6 +47,8 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 
+    Route::post('/admin/activities/{id}/registrations/import-attendance', [AdminRegistrationController::class, 'importAttendance'])
+    ->name('admin.registrations.importAttendance');
 });
 
 Route::resource('registrations', RegistrationController::class);
