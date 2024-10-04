@@ -90,4 +90,14 @@ class AdminActivityController extends Controller
 
         return redirect()->route('admin.activities.index')->with('error', 'Hành động không hợp lệ!');
     }
+
+    // Phương thức để hiển thị danh sách người dùng đã đăng ký vào hoạt động
+    public function registeredUsers($activity_id)
+    {
+        $activity = Activity::find($activity_id);
+        $registered_users = $activity->registeredUsers;
+        $registrations = $activity->registrations;
+
+        return view('admin.activities.registered-users', compact('activity', 'registered_users', 'registrations'));
+    }
 }

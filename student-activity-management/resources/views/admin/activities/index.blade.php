@@ -29,6 +29,7 @@
                 <th>Hạn Đăng Ký</th>
                 <th>Trạng Thái</th>
                 <th>Thao Tác</th>
+                <th>Danh Sách</th>
             </tr>
         </thead>
         <tbody>
@@ -54,6 +55,9 @@
                             <option value="delete">Xóa</option>
                         </select>
                     </form>
+                </td>
+                <td>
+                    <a href="{{ route('admin.activities.registered-users', $activity->id) }}" class="btn btn-info">Xem danh sách đăng ký</a>
                 </td>
             </tr>
             @endforeach

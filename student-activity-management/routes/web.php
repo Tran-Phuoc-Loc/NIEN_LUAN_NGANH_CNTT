@@ -38,6 +38,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('/admin/activities/edit/{id}', [AdminActivityController::class, 'edit'])->name('admin.activities.edit');
     Route::put('/admin/activities/{id}', [AdminActivityController::class, 'update'])->name('admin.activities.update');
     Route::patch('/admin/activities/{id}/destroy-or-hide', [AdminActivityController::class, 'destroyOrHide'])->name('admin.activities.destroyOrHide');
+    Route::get('admin/activities/{activity_id}/registered-users', [AdminActivityController::class, 'registeredUsers'])->name('admin.activities.registered-users');
 
     Route::get('/admin/managers', [AdminController::class, 'showUsers'])->name('admin.managers.index');
     Route::get('/admin/managers/create', [AdminController::class, 'create'])->name('admin.managers.create');
