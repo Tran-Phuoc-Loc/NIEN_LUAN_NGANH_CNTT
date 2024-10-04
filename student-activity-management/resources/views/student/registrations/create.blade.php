@@ -2,11 +2,17 @@
 
 @section('content')
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-lg-6 col-md-8 col-sm-12">
+    <div class="col-lg-6 col-sm-12">
         <h2 class="text-center mb-4">Đăng ký tham gia hoạt động: <strong>{{ $activity->name }}</strong></h2>
 
+        <!-- Hiển thị thông báo thành công -->
         @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        <!-- Hiển thị thông báo lỗi -->
+        @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
         <form action="{{ route('registrations.store', $activity->id) }}" method="POST" class="bg-white p-5 rounded shadow-lg">
@@ -45,6 +51,18 @@
             </div>
 
             <div class="mb-4">
+                <label for="batch" class="form-label fw-bold">Khóa</label>
+                <select name="batch" id="batch" class="form-select form-select-lg rounded-pill" required>
+                    <option value="">Chọn khóa</option>
+                    <option value="2023-1">2023 - Kỳ 1</option>
+                    <option value="2023-2">2023 - Kỳ 2</option>
+                    <option value="2024-1">2024 - Kỳ 1</option>
+                    <option value="2024-2">2024 - Kỳ 2</option>
+                    <option value="2024-3">2025 - Kỳ 1  </option>
+                </select>
+            </div>
+
+            <div class="mb-4">
                 <label for="email" class="form-label fw-bold">Email</label>
                 <input type="email" name="email" id="email" class="form-control form-control-lg rounded-pill bg-light" value="{{ $user->email }}" readonly>
             </div>
@@ -63,10 +81,6 @@
 </div>
 
 <style>
-    .container {
-        max-width: 600px;
-    }
-
     h2 {
         color: #34495e;
         font-family: 'Arial', sans-serif;

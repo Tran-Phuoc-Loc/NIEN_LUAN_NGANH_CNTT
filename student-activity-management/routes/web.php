@@ -11,6 +11,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminActivityController;
 use App\Http\Controllers\AdminIssueController;
+use App\Http\Controllers\AdminRegistrationController;
 
 
 // Route cho login
@@ -44,6 +45,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::post('/admin/managers', [AdminController::class, 'store'])->name('admin.managers.store');
     Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
+
 });
 
 Route::resource('registrations', RegistrationController::class);

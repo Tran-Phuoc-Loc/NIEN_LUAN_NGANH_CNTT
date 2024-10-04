@@ -19,7 +19,7 @@ class RegistrationController extends Controller
             ->where('student_id', $user->student_id)
             ->exists();
 
-        return view('registrations.create', compact('activity', 'isRegistered', 'user'));
+        return view('student.registrations.create', compact('activity', 'isRegistered', 'user'));
     }
 
     public function store(Request $request, $id)
@@ -28,7 +28,10 @@ class RegistrationController extends Controller
         $user = Auth::user();
 
         // Kiểm tra xem người dùng đã đăng ký chưa
-        if (Registration::where('activity_id', $activity->id)->where('student_id', $user->id)->exists()) {
+        if (Registration::where('activity_id', $activity->id)
+            ->where('student_id', $user->student_id)  // Sử dụng student_id
+            ->exists()
+        ) {
             return redirect()->back()->with('error', 'Bạn đã đăng ký tham gia hoạt động này.');
         }
 
@@ -41,17 +44,19 @@ class RegistrationController extends Controller
             'batch' => 'required|string|max:10',
         ]);
 
+        $studentId = Auth::user()->student_id;
         // Lưu thông tin đăng ký vào bảng registrations (giả sử bạn đã có bảng này)
         $activity->registrations()->create([
-            'student_id' => Auth::id(),
-            'name' => $request->name,
+            'student_id' => $studentId,
+            'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
             'department' => $request->department,
+            'batch' => $request->batch,
             'activity_id' => $activity->id,
         ]);
 
-        return redirect()->route('activities.register', ['activity' => $activity->id])
+        return redirect()->route('registrations.create', ['id' => $activity->id])
             ->with('success', 'Bạn đã đăng ký thành công.');
     }
 }
