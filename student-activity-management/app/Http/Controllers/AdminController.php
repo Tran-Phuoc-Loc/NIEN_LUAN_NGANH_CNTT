@@ -253,4 +253,27 @@ class AdminController extends Controller
         $user->delete();
         return redirect()->route('admin.managers.index')->with('success', 'Quản lý đã được xóa.');
     }
+
+    public function edit($id)
+    {
+        $student = Student::findOrFail($id);
+        return view('admin.managers.edit', compact('student'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:students,email,' . $id,
+            'phone' => 'nullable|string|max:15', // Số điện thoại
+            'class' => 'nullable|string|max:100', // Lớp
+            'department' => 'nullable|string|max:100', // Khoa
+            'role' => 'required|in:user,admin', // Quyền
+        ]);
+
+        $student = Student::findOrFail($id);
+        $student->update($request->only(['name', 'email', 'phone', 'class', 'department']));
+
+        return redirect()->route('admin.managers.index')->with('success', 'Thông tin sinh viên đã được cập nhật.');
+    }
 }

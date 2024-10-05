@@ -114,7 +114,7 @@
                             <!-- Chỉ admin mới thấy được -->
                             @if(Auth::check() && Auth::user()->role === 'admin')
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.students') }}">Quản lý sinh viên</a>
+                                <a class="nav-link" href="{{ route('admin.students') }}">Danh sách sinh viên</a>
                             </li>
                             @endif
 

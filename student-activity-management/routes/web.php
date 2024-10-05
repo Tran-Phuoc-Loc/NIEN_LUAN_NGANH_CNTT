@@ -45,6 +45,8 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('/admin/managers/create', [AdminController::class, 'create'])->name('admin.managers.create');
     Route::post('admin/managers/import', [AdminController::class, 'import'])->name('admin.managers.import');
     Route::post('/admin/managers', [AdminController::class, 'store'])->name('admin.managers.store');
+    Route::get('/managers/{id}/edit', [AdminController::class, 'edit'])->name('admin.managers.edit');
+    Route::post('/managers/{id}', [AdminController::class, 'update'])->name('admin.managers.update');
     Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 

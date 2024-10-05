@@ -46,6 +46,7 @@
                     </form>
                 </td>
                 <td>
+                    <a href="{{ route('admin.managers.edit', $user->id) }}" class="btn btn-warning">Chỉnh sửa</a>
                     <form action="{{ route('admin.managers.destroy', $user->id) }}" method="POST" style="display: inline;">
                         @csrf
                         @method('DELETE')
