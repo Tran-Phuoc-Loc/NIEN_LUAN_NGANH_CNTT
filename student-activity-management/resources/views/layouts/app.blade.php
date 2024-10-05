@@ -34,9 +34,6 @@
                 </li>
                 <!-- Các liên kết khác -->
             </ul>
-            <div class="mt-3">
-                <a href="{{ route('password.request') }}">Quên mật khẩu? Đặt lại tại đây.</a>
-            </div>
         </div>
     </nav>
 
