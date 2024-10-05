@@ -128,15 +128,6 @@
                                 </ul>
                             </li>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="registrationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Quản lý Đăng ký
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="registrationsDropdown">
-                                    <li><a class="dropdown-item" href="#">Danh sách Đăng ký</a></li>
-                                </ul>
-                            </li>
-
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.managers.index') }}">Quản lý Thành viên</a>
                             </li>

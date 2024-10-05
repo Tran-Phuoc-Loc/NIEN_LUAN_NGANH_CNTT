@@ -9,10 +9,18 @@
         {{ session('error') }}
     </div>
     @endif
+
     <!-- Thanh tìm kiếm -->
     <form action="{{ route('admin.students') }}" method="GET" class="mb-3">
         <div class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Tìm kiếm theo tên, email, hoặc mã sinh viên" value="{{ request('search') }}">
+            <select name="sort" class="form-control">
+                <option value="">Thứ tự mặc định</option>
+                <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Tên A-Z</option>
+                <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Tên Z-A</option>
+                <option value="email_asc" {{ request('sort') == 'email_asc' ? 'selected' : '' }}>Email A-Z</option>
+                <option value="email_desc" {{ request('sort') == 'email_desc' ? 'selected' : '' }}>Email Z-A</option>
+            </select>
             <button class="btn btn-primary" type="submit">Tìm kiếm</button>
         </div>
     </form>
