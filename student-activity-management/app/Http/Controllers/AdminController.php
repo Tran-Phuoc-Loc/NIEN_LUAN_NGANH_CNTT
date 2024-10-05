@@ -18,7 +18,7 @@ class AdminController extends Controller
         $totalMembers = User::count();  // Tổng số thành viên 
         $totalActivities = Activity::count();  // Tổng số hoạt động
         $visibleActivitiesCount = Activity::where('is_hidden', 0)->count(); // Đếm số hoạt động không ẩn
-        $recentActivities = Activity::where('is_hidden', 0)->orderBy('created_at', 'desc')->take(2)->get();
+        $recentActivities = Activity::withCount('registrations')->latest()->take(3)->get();
         $studentIssues = StudentIssue::orderBy('created_at', 'desc')->take(5)->get();
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Activity;
+use App\Models\Notification;
 
 class StudentController extends Controller
 {
@@ -16,8 +17,7 @@ class StudentController extends Controller
         // Lấy danh sách hoạt động sắp tới từ bảng 'activities'
         $upcoming_activities = Activity::where('date', '>=', now())->get();
 
-        // Giả sử bạn có các thông báo, đây chỉ là một mảng trống cho ví dụ
-        $notifications = [];
+        $notifications = Notification::where('student_id', Auth::id())->get(); // Lấy các thông báo cho người dùng hiện tại
 
         // Trả về view với dữ liệu hoạt động và thông tin người dùng
         return view('student.dashboard', compact('user', 'upcoming_activities', 'notifications'));

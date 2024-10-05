@@ -40,8 +40,9 @@ class AdminIssueController extends Controller
     {
         // Kiểm tra nếu người dùng không nhập từ khóa tìm kiếm
         if (!$request->has('search') || trim($request->search) === '') {
-            // Trả về view cùng với thông báo lỗi nhưng không chuyển hướng
-            return view('admin.issues.send')->with('error', 'Vui lòng nhập từ khóa tìm kiếm.');
+            // Trả về danh sách tất cả sinh viên
+            $allStudents = Student::all();
+            return view('admin.issues.send', ['allStudents' => $allStudents]);
         }
 
         // Truy vấn sinh viên có vai trò là "student" và lấy dữ liệu từ cả hai bảng
@@ -55,29 +56,44 @@ class AdminIssueController extends Controller
                     ->orWhere('student_id', 'like', '%' . $request->search . '%');
             });
         }
+
+        // Phân trang kết quả
         $students = $query->paginate(10);
 
-        // Kiểm tra dữ liệu
+        // Kiểm tra nếu không tìm thấy kết quả từ tìm kiếm
         if ($students->isEmpty()) {
-            return redirect()->route('admin.issues.send')
-                ->with('error', 'Không tìm thấy sinh viên nào.');
+            // Trả về danh sách tất cả sinh viên
+            $allStudents = Student::all();
+            return view('admin.issues.send', [
+                'error' => 'Không tìm thấy sinh viên nào theo từ khóa, đây là danh sách tất cả sinh viên.',
+                'allStudents' => $allStudents
+            ]);
         }
-        // dd($students);
+
+        // Trả về kết quả tìm kiếm
         return view('admin.issues.send', compact('students'));
     }
 
     public function storeSend(Request $request)
     {
         $request->validate([
-            'student_ids' => 'required|array',
-            'student_ids.*' => 'exists:users,id',
             'message' => 'required|string|max:1000',
+            'student_ids' => 'array|nullable', // Cho phép null nếu gửi đến tất cả
         ]);
 
+        // Kiểm tra xem có gửi đến tất cả sinh viên không
+        if ($request->has('send_to_all')) {
+            // Lấy tất cả sinh viên
+            $students = Student::all();
+        } else {
+            // Lấy sinh viên được chọn
+            $students = Student::whereIn('id', $request->student_ids)->get();
+        }
+
         // Lưu thông báo cho từng sinh viên
-        foreach ($request->student_ids as $studentId) {
+        foreach ($students as $student) {
             Notification::create([
-                'student_id' => $studentId,
+                'student_id' => $student->id,
                 'message' => $request->message,
             ]);
         }

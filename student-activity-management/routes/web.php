@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\IssueController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
@@ -58,6 +59,10 @@ Route::resource('registrations', RegistrationController::class);
 Route::middleware('auth')->group(function () {
     // Route cho Dashboard
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+    // Route cho người dùng gửi thắc mắc
+    Route::post('student/issues', [IssueController::class, 'store'])->name('student.issues.store');
+
+    Route::get('/issues', [IssueController::class, 'index'])->name('student.issues.index');
 
     // Route cho Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');

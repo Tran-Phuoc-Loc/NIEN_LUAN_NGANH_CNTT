@@ -40,7 +40,7 @@
                 <div class="activity-item mb-3">
                     <h5>{{ $activity->name }}</h5>
                     <p>Ngày diễn ra: {{ $activity->date->format('d/m/Y') }}</p>
-                    <p>Số người tham gia: {{ $activity->participants_count }}</p>
+                    <p>Số người tham gia: {{ $activity->registrations_count }}</p>
                 </div>
                 @endforeach
                 <a href="{{ route('admin.activities.index') }}" class="btn btn-primary w-100">Xem tất cả hoạt động</a>
@@ -70,7 +70,4 @@
                 <a href="{{ route('admin.issues.index') }}" class="btn btn-warning w-100 mt-3">Xem tất cả thông báo</a>
             </div>
         </div>
-
-
-
-        @endsection
+@endsection

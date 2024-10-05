@@ -168,10 +168,17 @@
 
     <script>
         $(document).ready(function() {
+            // Sự kiện cho nút "Chọn Tất Cả"
+            $('#selectAllButton').click(function() {
+                $('.student-checkbox').prop('checked', function(i, value) {
+                    return !value; // Đảo trạng thái checkbox
+                });
+            });
+
+            // Tìm kiếm sinh viên
             $('#studentSearch').on('input', function() {
                 const searchValue = $(this).val().toLowerCase();
-                const studentTable = $('#studentTable');
-                const rows = studentTable.find('tbody tr');
+                const rows = $('#studentTable tbody tr');
 
                 let hasResults = false;
 
@@ -188,21 +195,9 @@
                     }
                 });
 
-                // Hiển thị bảng nếu có kết quả khớp, ngược lại thì ẩn bảng
-                if (searchValue === '') {
-                    studentTable.hide(); // Ẩn bảng nếu không nhập từ khóa tìm kiếm
-                } else {
-                    studentTable.toggle(hasResults); // Chỉ hiện bảng khi có kết quả
-                }
+                // Hiển thị bảng bất kể có kết quả hay không
+                $('#studentTable').show(); // Luôn hiển thị bảng
             });
-
-            // Kiểm tra hiển thị bảng sau khi tải trang
-            const rows = $('#studentTable tbody tr');
-            const hasInitialResults = rows.filter(function() {
-                return $(this).css('display') !== 'none';
-            }).length > 0;
-
-            $('#studentTable').toggle(hasInitialResults);
         });
     </script>
     <script>
