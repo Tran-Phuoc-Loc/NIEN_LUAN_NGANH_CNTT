@@ -41,7 +41,7 @@ class AdminIssueController extends Controller
         // Kiểm tra nếu người dùng không nhập từ khóa tìm kiếm
         if (!$request->has('search') || trim($request->search) === '') {
             // Trả về danh sách tất cả sinh viên
-            $allStudents = Student::all();
+            $allStudents =  Student::paginate(10); 
             return view('admin.issues.send', ['allStudents' => $allStudents]);
         }
 
@@ -63,7 +63,7 @@ class AdminIssueController extends Controller
         // Kiểm tra nếu không tìm thấy kết quả từ tìm kiếm
         if ($students->isEmpty()) {
             // Trả về danh sách tất cả sinh viên
-            $allStudents = Student::all();
+            $allStudents = Student::paginate(10);
             return view('admin.issues.send', [
                 'error' => 'Không tìm thấy sinh viên nào theo từ khóa, đây là danh sách tất cả sinh viên.',
                 'allStudents' => $allStudents

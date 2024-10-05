@@ -115,8 +115,8 @@
             <label for="message" class="form-label">Nội dung thông báo</label>
             <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
         </div>
-
         <button type="submit" class="btn btn-warning w-100">Gửi Thông Báo</button>
+        {{ $allStudents->links() }} <!-- Liên kết phân trang cho allStudents -->
     </form>
     @endif
 </div>
