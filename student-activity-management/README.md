@@ -39,8 +39,8 @@
    php artisan db:seed
 
 8. **Sử dụng Job và Queue trong Laravel để xử lý công việc nền (background jobs)**
-   **Hướng dẫn**: Mở file .env và cập nhật dòng sau: 
-   QUEUE_CONNECTION=database
+  - **Hướng dẫn**: Mở file .env và cập nhật dòng sau: 
+  - QUEUE_CONNECTION=database
    ```bash
    php artisan queue:work
 7. **Chạy migrations để tạo các bảng trong cơ sở dữ liệu**:
