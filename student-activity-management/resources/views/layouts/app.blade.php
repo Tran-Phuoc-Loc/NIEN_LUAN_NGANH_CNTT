@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,14 @@
 </head>
 <style>
     body {
-    background: url('/storage/images/background.png') no-repeat center center fixed;
-    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
+        background: url('/storage/images/background.png') no-repeat center center fixed;
+        background-size: cover;
+        /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
+        color: #000;
+        font-family: Arial, sans-serif;
+    }
 </style>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{{ url('/') }}">Hoạt động đoàn/hội</a>
@@ -27,11 +30,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href=""{{ route('login') }}"">Trang chủ</a>
+                    <a class="nav-link" href="" {{ route('login') }}"">Trang chủ</a>
                 </li>
                 <!-- Các liên kết khác -->
             </ul>
-            
+            <div class="mt-3">
+                <a href="{{ route('password.request') }}">Quên mật khẩu? Đặt lại tại đây.</a>
+            </div>
         </div>
     </nav>
 
@@ -41,4 +46,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
+
 </html>
