@@ -8,6 +8,8 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminNewsController;
+use App\Http\Controllers\NewsController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminActivityController;
@@ -54,6 +56,13 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
         ->name('admin.registrations.importAttendance');
     Route::get('/admin/activities/{id}/unregistered-attendances', [AdminActivityController::class, 'showUnregisteredAttendances'])
         ->name('admin.activities.unregistered-attendances');
+
+    Route::get('/admin/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
+    Route::get('admin/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
+    Route::post('admin/news', [AdminNewsController::class, 'store'])->name('admin.news.store');
+    Route::get('admin/news/{id}/edit', [AdminNewsController::class, 'edit'])->name('admin.news.edit');
+    Route::delete('/admin/news/{id}', [AdminNewsController::class, 'destroy'])->name('admin.news.destroy');
+    Route::put('admin/news/{id}', [AdminNewsController::class, 'update'])->name('admin.news.update');
 });
 
 Route::resource('registrations', RegistrationController::class);
@@ -63,6 +72,11 @@ Route::middleware('auth')->group(function () {
     Route::get('student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
     // Route cho người dùng gửi thắc mắc
     Route::post('student/issues', [IssueController::class, 'store'])->name('student.issues.store');
+
+    // routes/web.php
+    Route::get('/news', [NewsController::class, 'index'])->name('student.news.index');
+    Route::get('/news/{id}', [NewsController::class, 'show'])->name('student.news.show');
+
 
     Route::get('/issues', [IssueController::class, 'index'])->name('student.issues.index');
 

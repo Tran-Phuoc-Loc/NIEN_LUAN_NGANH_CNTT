@@ -29,6 +29,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('student.issues.index') }}">Thông báo</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('student.news.index') }}">Tin Tức</a>
+                        </li>
                         @auth
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('profile.show') }}">Thông tin cá nhân</a>

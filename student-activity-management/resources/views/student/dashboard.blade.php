@@ -81,11 +81,15 @@
             </div>
         </div>
 
-        <!-- Thống kê hoạt động -->
+        <!-- Thống kê hoạt động đã tham gia -->
         <div class="card">
-            <div class="card-header">Thống kê hoạt động mà bạn đã tham gia</div>
+            <div class="card-header">Các hoạt động mà bạn đã tham gia</div>
             <div class="card-content">
-                <!-- Thông tin thống kê sẽ được thêm vào đây -->
+                <ul>
+                    @foreach($participated_activities as $activity_name)
+                    <li>{{ $activity_name }}</li>
+                    @endforeach
+                </ul>
             </div>
         </div>
 

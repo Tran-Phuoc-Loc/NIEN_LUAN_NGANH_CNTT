@@ -132,10 +132,10 @@
                                 <a class="nav-link" href="{{ route('admin.managers.index') }}">Quản lý Thành viên</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('registrations.index') }}">Báo cáo</a>
+                                <a class="nav-link" href="{{ route('admin.issues.send') }}">Gửi Thông báo</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.issues.send') }}">Gửi Thông báo</a>
+                                <a class="nav-link" href="{{ route('admin.news.index') }}">Tin tức</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>

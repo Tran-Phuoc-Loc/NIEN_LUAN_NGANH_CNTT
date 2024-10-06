@@ -13,12 +13,18 @@
 </head>
 <style>
     body {
-    background: url('/storage/images/background.png') no-repeat center center fixed;
-    background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
+        background: url('/storage/images/background.png') no-repeat center center fixed;
+        background-size: cover;
+        /* Đảm bảo hình nền bao phủ toàn bộ màn hình */
+        color: #fff;
+        font-family: Arial, sans-serif;
+    }
+
+    p {
+        color: #000;
+    }
 </style>
+
 <body>
     <div id="app" class="d-flex align-items-center justify-content-center vh-100">
         <div class="container">
