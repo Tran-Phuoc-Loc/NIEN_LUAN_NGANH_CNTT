@@ -86,12 +86,17 @@
             <div class="card-header">Các hoạt động mà bạn đã tham gia</div>
             <div class="card-content">
                 <ul>
-                    @foreach($participated_activities as $activity_name)
-                    <li>{{ $activity_name }}</li>
+                    @if(!empty($participated_activities))
+                    @foreach($participated_activities as $activity)
+                    <li>{{ $activity }}</li>
                     @endforeach
+                    @else
+                    <li>Bạn chưa tham gia hoạt động nào.</li>
+                    @endif
                 </ul>
             </div>
         </div>
+
 
         <!-- Thông báo mới -->
         <div class="card ">
