@@ -9,8 +9,10 @@ class ActivityController extends Controller
 {
     public function index()
     {
-        // Lấy 10 hoạt động mỗi trang
-        $activities = Activity::orderBy('date', 'desc')->paginate(10);
+        // Lấy 10 hoạt động mỗi trang, sắp xếp theo ngày và không bị ẩn
+        $activities = Activity::where('is_hidden', 0) // Chỉ lấy những hoạt động không bị ẩn
+            ->orderBy('date', 'desc')
+            ->paginate(10);
         return view('student.activities.index', compact('activities'));
     }
 

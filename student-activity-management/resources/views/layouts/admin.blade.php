@@ -111,12 +111,10 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
-                            <!-- Chỉ admin mới thấy được -->
-                            @if(Auth::check() && Auth::user()->role === 'admin')
+
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.students') }}">Danh sách sinh viên</a>
                             </li>
-                            @endif
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="activitiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -131,9 +129,21 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.managers.index') }}">Quản lý Thành viên</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.issues.send') }}">Gửi Thông báo</a>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="issuesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Quản lý Thông báo
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="issuesDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.issues.index') }}">Danh sách Thông báo</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('admin.issues.send') }}">Tạo Thông báo</a>
+                                    </li>
+                                </ul>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.news.index') }}">Tin tức</a>
                             </li>

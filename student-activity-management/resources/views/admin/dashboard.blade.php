@@ -57,12 +57,18 @@
                 @else
                 <ul class="list-group">
                     @foreach ($studentIssues as $issue)
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                @if($issue->is_resolved) bg-success text-white @endif">
                         <div>
                             <strong>{{ $issue->student_name }}:</strong> {{ $issue->message }}
                             <br><small>Gửi vào ngày: {{ $issue->created_at->format('d/m/Y H:i') }}</small>
                         </div>
+
+                        @if($issue->is_resolved)
+                        <span class="badge badge-success">Đã xử lý</span>
+                        @else
                         <a href="{{ route('admin.issues.resolve', $issue->id) }}" class="btn btn-sm btn-warning">Xử lý</a>
+                        @endif
                     </li>
                     @endforeach
                 </ul>

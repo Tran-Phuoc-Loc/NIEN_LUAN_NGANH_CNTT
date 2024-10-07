@@ -24,8 +24,8 @@ class StudentController extends Controller
         $upcoming_activities = Activity::where('date', '>=', now())->get();
 
         // Lấy các thông báo cho người dùng hiện tại
-        $notifications = Notification::where('student_id', $user->id)->get();
-
+        $notifications = Notification::where('student_id', $user->id)->orderBy('created_at', 'desc')
+            ->get();
         // Khai báo mảng để lưu hoạt động mà sinh viên đã tham gia
         $participated_activities = [];
 

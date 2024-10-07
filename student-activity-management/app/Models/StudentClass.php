@@ -23,9 +23,9 @@ class StudentClass extends Model
         return $this->hasMany(Student::class);
     }
 
-    // Quan hệ với khoa
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
+    // // Quan hệ với khoa
+    // public function department()
+    // {
+    //     return $this->belongsTo(Department::class);
+    // }
 }

@@ -12,7 +12,8 @@ class IssueController extends Controller
     public function index()
     {
         // Lấy danh sách thông báo của sinh viên
-        $notifications = Notification::where('student_id', Auth::id())->get();
+        $notifications = Notification::where('student_id', Auth::id())->orderBy('created_at', 'desc')
+        ->get();
 
         // Chuyển hướng đến view
         return view('student.issues.index', compact('notifications'));

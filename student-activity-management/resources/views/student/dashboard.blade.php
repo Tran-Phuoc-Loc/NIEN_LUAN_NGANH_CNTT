@@ -97,9 +97,8 @@
             </div>
         </div>
 
-
         <!-- Thông báo mới -->
-        <div class="card ">
+        <div class="card">
             <div class="card-header">
                 <h4>Thông báo mới</h4>
             </div>
@@ -110,21 +109,23 @@
                 </div>
                 @elseif (isset($notifications))
                 @foreach ($notifications as $notification)
-                <div class="alert 
+                <a href="{{ route('student.issues.index') }}" class="text-decoration-none">
+                    <div class="alert 
                     @if($notification['type'] == 'success') alert-success 
                     @elseif($notification['type'] == 'error') alert-danger 
                     @elseif($notification['type'] == 'warning') alert-warning 
                     @else alert-info 
                     @endif">
-                    <strong>Admin thông báo:</strong>
-                    <i class="
+                        <strong>Admin thông báo:</strong>
+                        <i class="
                     @if($notification['type'] == 'success') fas fa-check-circle 
                     @elseif($notification['type'] == 'error') fas fa-exclamation-circle 
                     @elseif($notification['type'] == 'warning') fas fa-exclamation-triangle 
                     @else fas fa-info-circle 
                     @endif"></i>
-                    {{ $notification['message'] }}
-                </div>
+                        {{ $notification['message'] }}
+                    </div>
+                </a>
                 @endforeach
                 @else
                 <div class="alert alert-info text-center">
@@ -133,7 +134,6 @@
                 @endif
             </div>
         </div>
-
     </div>
 </div>
 <style>
