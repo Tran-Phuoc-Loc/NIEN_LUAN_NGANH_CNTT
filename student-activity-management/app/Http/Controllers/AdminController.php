@@ -237,14 +237,14 @@ class AdminController extends Controller
         $currentUser = Auth::user();
 
         // Log thông tin người dùng hiện tại và vai trò yêu cầu
-        Log::info('Current User:', ['id' => $currentUser->id, 'role' => $currentUser->role, 'is_super_admin' => $currentUser->is_super_admin]);
-        Log::info('User to Update:', ['id' => $user->id, 'role' => $user->role]);
+        // Log::info('Current User:', ['id' => $currentUser->id, 'role' => $currentUser->role, 'is_super_admin' => $currentUser->is_super_admin]);
+        // Log::info('User to Update:', ['id' => $user->id, 'role' => $user->role]);
 
         // Kiểm tra nếu người dùng hiện tại là admin chủ
         if ($currentUser->is_super_admin) {
             // Ngăn admin chủ tự hạ quyền
             if ($user->id === $currentUser->id && $request->role === 'user') {
-                Log::warning('Super admin trying to demote themselves', ['super_admin_id' => $currentUser->id]);
+                // Log::warning('Super admin trying to demote themselves', ['super_admin_id' => $currentUser->id]);
                 return redirect()->route('admin.managers.index')->with('error', 'Admin chủ không thể tự hạ quyền của mình.');
             }
 
@@ -252,7 +252,7 @@ class AdminController extends Controller
             $user->role = $request->role;
             $user->save();
 
-            Log::info('Role updated by super admin', ['user_id' => $user->id, 'new_role' => $request->role]);
+            // Log::info('Role updated by super admin', ['user_id' => $user->id, 'new_role' => $request->role]);
             return redirect()->route('admin.managers.index')->with('success', 'Quyền đã được cập nhật thành công');
         }
 
@@ -260,13 +260,13 @@ class AdminController extends Controller
         if ($currentUser->role === 'admin') {
             // Ngăn người dùng admin không thể hạ quyền admin khác
             if ($user->role === 'admin' && $request->role === 'user') {
-                Log::warning('Admin trying to demote another admin', ['admin_id' => $currentUser->id, 'demoted_admin_id' => $user->id]);
+                // Log::warning('Admin trying to demote another admin', ['admin_id' => $currentUser->id, 'demoted_admin_id' => $user->id]);
                 return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể hạ quyền một admin khác.');
             }
 
             // Kiểm tra nếu người dùng đang cố gắng tự chuyển xuống vai trò user
             if ($user->id === $currentUser->id && $request->role === 'user') {
-                Log::warning('Admin trying to demote themselves', ['admin_id' => $currentUser->id]);
+                // Log::warning('Admin trying to demote themselves', ['admin_id' => $currentUser->id]);
                 return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể tự chuyển đổi vai trò của mình thành người dùng.');
             }
 

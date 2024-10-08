@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
         <p><strong>Tên:</strong> {{ $user->name }}</p>
-            <p><strong>MSSV:</strong> {{ $user->student_id }}</p>
+            <p><strong>Mã đoàn viên:</strong> {{ $user->student_id }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
             
             @if($student)
