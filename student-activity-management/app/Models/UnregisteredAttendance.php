@@ -14,7 +14,6 @@ class UnregisteredAttendance extends Model
         'full_name',
         'email',
         'phone',
-        'department',
         'batch',
         'activity_id',
     ];

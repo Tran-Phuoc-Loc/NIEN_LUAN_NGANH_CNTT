@@ -41,7 +41,7 @@ class LoginController extends Controller
     {
         if ($user->role == 'admin') {
             return redirect()->route('admin.dashboard');
-        } elseif ($user->role == 'student') {
+        } elseif ($user->role == 'user') {
             return redirect()->route('student.dashboard');
         } else {
             // Redirect đến trang mặc định nếu không phải sinh viên hoặc admin

@@ -14,8 +14,7 @@
                 <th>Tên Sinh Viên</th>
                 <th>Email</th>
                 <th>Điện Thoại</th>
-                <th>Khoa</th>
-                <th>Khoa</th>
+                <th>Khóa</th>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +24,6 @@
                 <td>{{ $attendance->full_name }}</td>
                 <td>{{ $attendance->email ?? 'Không có email' }}</td>
                 <td>{{ $attendance->phone ?? 'Không có số điện thoại' }}</td>
-                <td>{{ $attendance->department }}</td>
                 <td>{{ $attendance->batch }}</td>
             </tr>
             @endforeach

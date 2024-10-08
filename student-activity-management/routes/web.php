@@ -30,9 +30,10 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('admin/managers/students', [AdminController::class, 'showStudents'])->name('admin.students');
 
     Route::get('admin/issues', [AdminIssueController::class, 'index'])->name('admin.issues.index');
-    Route::get('admin/issues/{id}/resolve', [AdminIssueController::class, 'resolve'])->name('admin.issues.resolve');
     Route::get('admin/issues/send', [AdminIssueController::class, 'send'])->name('admin.issues.send');
     Route::post('admin/issues/send', [AdminIssueController::class, 'storeSend'])->name('admin.issues.storeSend');
+    Route::get('admin/issues/{id}/resolve', [AdminIssueController::class, 'resolve'])->name('admin.issues.resolve');
+    Route::delete('/admin/issues/{id}', [AdminIssueController::class, 'destroy'])->name('admin.issues.destroy');
 
 
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
@@ -47,8 +48,8 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('/admin/managers/create', [AdminController::class, 'create'])->name('admin.managers.create');
     Route::post('admin/managers/import', [AdminController::class, 'import'])->name('admin.managers.import');
     Route::post('/admin/managers', [AdminController::class, 'store'])->name('admin.managers.store');
-    Route::get('/managers/{id}/edit', [AdminController::class, 'edit'])->name('admin.managers.edit');
-    Route::post('/managers/{id}', [AdminController::class, 'update'])->name('admin.managers.update');
+    Route::get('admin/managers/{id}/edit', [AdminController::class, 'edit'])->name('admin.managers.edit');
+    Route::put('admin/managers/{id}', [AdminController::class, 'update'])->name('admin.managers.update');
     Route::post('/admin/managers/{user}/role', [AdminController::class, 'updateRole'])->name('admin.managers.updateRole');
     Route::delete('/admin/managers/{user}', [AdminController::class, 'destroy'])->name('admin.managers.destroy');
 

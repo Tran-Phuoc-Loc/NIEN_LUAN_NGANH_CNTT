@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Jobs\UpdateStudentUserId;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -44,8 +45,8 @@ class AdminController extends Controller
                     'name.*' => 'required|string|max:255',
                     'email.*' => 'required|email|unique:users,email',  // Thêm email
                     'phone.*' => 'nullable|string|max:255',
-                    'class.*' => 'nullable|string|max:255',
-                    'department.*' => 'nullable|string|max:255',
+                    'joining_date.*' => 'nullable|string|max:255',
+                    'card_issuing_place.*' => 'nullable|string|max:255',
                     'password.*' => 'required|string|min:6',
                 ]);
 
@@ -55,6 +56,7 @@ class AdminController extends Controller
                         'name' => $validatedData['name'][$key],
                         'email' => $validatedData['email'][$key],
                         'password' => bcrypt($validatedData['password'][$key]),
+                        'role' => 'user',
                         'student_id' => $studentId,
                     ]);
 
@@ -64,10 +66,12 @@ class AdminController extends Controller
                         'name' => $validatedData['name'][$key],
                         'email' => $validatedData['email'][$key],
                         'phone' => $validatedData['phone'][$key],
-                        'class' => $validatedData['class'][$key],
-                        'department' => $validatedData['department'][$key],
+                        'joining_date' => $validatedData['joining_date'][$key],
+                        'card_issuing_place' => $validatedData['card_issuing_place'][$key],
                         'user_id' => $user->id, // Liên kết với user đã tạo
                     ]);
+                    // dd($user->id); // Kiểm tra giá trị user_id trước khi lưu
+
                 }
             }
 
@@ -98,12 +102,26 @@ class AdminController extends Controller
                 }
 
                 try {
+                    // Chuyển đổi ngày từ định dạng Excel nếu cần thiết
+                    $joiningDate = $row[4]; // Giả sử cột ngày ở vị trí thứ 5 trong file Excel
+                    if (!empty($joiningDate)) {
+                        try {
+                            // Chuyển đổi định dạng ngày từ Excel (thường là 'd/m/Y') sang 'Y-m-d'
+                            $joiningDate = Carbon::createFromFormat('d/m/Y', $joiningDate)->format('Y-m-d');
+                        } catch (\Exception $e) {
+                            // Nếu có lỗi trong chuyển đổi, bỏ qua hoặc ghi log
+                            Log::error('Lỗi khi chuyển đổi ngày: ' . $e->getMessage());
+                            $joiningDate = null;
+                        }
+                    }
+
                     // Lưu dữ liệu vào bảng users
                     $user = User::updateOrCreate(
                         ['email' => $row[2]], // Điều kiện tìm kiếm
                         [
                             'name' => $row[1],
                             'password' => bcrypt($row[6]),
+                            'role' => 'user',
                             'student_id' => $row[0],
                         ]
                     );
@@ -115,18 +133,13 @@ class AdminController extends Controller
                             'name' => $row[1],
                             'email' => $row[2],
                             'phone' => $row[3],
-                            'class' => $row[4],
-                            'department' => $row[5],
+                            'joining_date' => $joiningDate, // Sử dụng ngày đã được chuyển đổi
+                            'card_issuing_place' => $row[5],
                             'user_id' => $user->id, // Gán user_id cho sinh viên
                         ]
                     );
-
-                    // Dispatch job để cập nhật user_id
-                    UpdateStudentUserId::dispatch($row[0]); // student_id từ file
                 } catch (\Exception $e) {
-                    // Ghi log hoặc xử lý lỗi khác nếu cần
-
-                    Log::error('Lỗi khi nhập dữ liệu: ' . $e->getMessage());
+                    Log::error('Lỗi khi nhập dữ liệu từ file: ' . $e->getMessage());
                 }
             }
 
@@ -148,8 +161,8 @@ class AdminController extends Controller
                 $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
                     ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($search) . '%'])
                     ->orWhereRaw('LOWER(student_id) LIKE ?', ['%' . strtolower($search) . '%'])
-                    ->orWhereRaw('LOWER(department) LIKE ?', ['%' . strtolower($search) . '%'])
-                    ->orWhereRaw('LOWER(class) LIKE ?', ['%' . strtolower($search) . '%']);
+                    ->orWhereRaw('LOWER(card_issuing_place) LIKE ?', ['%' . strtolower($search) . '%'])
+                    ->orWhereRaw('LOWER(joining_date) LIKE ?', ['%' . strtolower($search) . '%']);
             });
         }
 
@@ -174,8 +187,6 @@ class AdminController extends Controller
         // Lấy danh sách sinh viên
         $students = $query->get();
 
-
-        // dd($students, $departments, $classes);
         // Trả về view hiển thị danh sách sinh viên
         return view('admin.managers.students', compact('students'));
     }
@@ -202,8 +213,16 @@ class AdminController extends Controller
                 ->orWhereRaw("email COLLATE utf8mb4_general_ci LIKE ?", ['%' . $search . '%']);
         }
 
-        // Lấy danh sách người dùng và sắp xếp admin lên trên cùng
-        $users = $query->orderByRaw("role = 'admin' DESC")->get();
+        // Kiểm tra nếu người dùng hiện tại là admin chủ
+        if (Auth::user()->is_super_admin) {
+            // Nếu là admin chủ, lấy tất cả người dùng bao gồm cả admin chủ
+            $users = $query->orderByRaw("role = 'admin' DESC")->get();
+        } else {
+            // Nếu không phải admin chủ, loại trừ admin chủ
+            $users = $query->where('is_super_admin', false)
+                ->orderByRaw("role = 'admin' DESC")
+                ->get();
+        }
 
         return view('admin.managers.index', compact('users'));
     }
@@ -215,25 +234,71 @@ class AdminController extends Controller
             'role' => 'required|in:admin,user',
         ]);
 
-        // Kiểm tra nếu người dùng hiện tại là admin và đang cố gắng tự chuyển xuống vai trò user
-        if ($user->id && $request->role === 'user') {
-            return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể tự chuyển đổi vai trò thành người dùng.');
+        $currentUser = Auth::user();
+
+        // Log thông tin người dùng hiện tại và vai trò yêu cầu
+        Log::info('Current User:', ['id' => $currentUser->id, 'role' => $currentUser->role, 'is_super_admin' => $currentUser->is_super_admin]);
+        Log::info('User to Update:', ['id' => $user->id, 'role' => $user->role]);
+
+        // Kiểm tra nếu người dùng hiện tại là admin chủ
+        if ($currentUser->is_super_admin) {
+            // Ngăn admin chủ tự hạ quyền
+            if ($user->id === $currentUser->id && $request->role === 'user') {
+                Log::warning('Super admin trying to demote themselves', ['super_admin_id' => $currentUser->id]);
+                return redirect()->route('admin.managers.index')->with('error', 'Admin chủ không thể tự hạ quyền của mình.');
+            }
+
+            // Cập nhật vai trò cho người dùng
+            $user->role = $request->role;
+            $user->save();
+
+            Log::info('Role updated by super admin', ['user_id' => $user->id, 'new_role' => $request->role]);
+            return redirect()->route('admin.managers.index')->with('success', 'Quyền đã được cập nhật thành công');
         }
 
-        // Cập nhật vai trò cho người dùng
-        $user->role = $request->role;
-        $user->save();
+        // Kiểm tra nếu người dùng hiện tại là admin nhưng không phải admin chủ
+        if ($currentUser->role === 'admin') {
+            // Ngăn người dùng admin không thể hạ quyền admin khác
+            if ($user->role === 'admin' && $request->role === 'user') {
+                Log::warning('Admin trying to demote another admin', ['admin_id' => $currentUser->id, 'demoted_admin_id' => $user->id]);
+                return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể hạ quyền một admin khác.');
+            }
 
-        return redirect()->route('admin.managers.index')->with('success', 'Quyền đã được cập nhật thành công');
+            // Kiểm tra nếu người dùng đang cố gắng tự chuyển xuống vai trò user
+            if ($user->id === $currentUser->id && $request->role === 'user') {
+                Log::warning('Admin trying to demote themselves', ['admin_id' => $currentUser->id]);
+                return redirect()->route('admin.managers.index')->with('error', 'Bạn không thể tự chuyển đổi vai trò của mình thành người dùng.');
+            }
+
+            return redirect()->route('admin.managers.index')->with('error', 'Bạn không có quyền cấp quyền cho người khác.');
+        }
+
+        // Nếu không có trường hợp nào được xử lý
+        return redirect()->route('admin.managers.index')->with('error', 'Hành động không hợp lệ.');
     }
 
     // Xóa người dùng
     public function destroy(User $user)
     {
-        // Kiểm tra xem người dùng hiện tại có phải là admin không
-        if (Auth::user()->role === 'admin') {
+        $currentUser = Auth::user();
+
+        // Kiểm tra xem người dùng hiện tại có phải là admin chủ không
+        if ($currentUser->is_super_admin) {
+            // Tìm bản ghi liên quan trong bảng students và xóa
+            $student = Student::where('student_id', $user->student_id)->first(); // Trường student_id trong bảng users
+            if ($student) {
+                $student->delete(); // Xóa bản ghi trong bảng students
+            }
+
+            // Xóa bản ghi trong bảng users
+            $user->delete();
+            return redirect()->route('admin.managers.index')->with('success', 'Quản lý đã được xóa.');
+        }
+
+        // Kiểm tra nếu người dùng hiện tại là admin
+        if ($currentUser->role === 'admin') {
             // Nếu người dùng đang cố gắng xóa chính mình
-            if (Auth::id() === $user->id) {
+            if ($currentUser->id === $user->id) {
                 return redirect()->route('admin.managers.index')->with('error', 'Không thể xóa tài khoản của chính mình.');
             }
 
@@ -241,22 +306,30 @@ class AdminController extends Controller
             if ($user->role === 'admin') {
                 return redirect()->route('admin.managers.index')->with('error', 'Không thể xóa quản trị viên.');
             }
+
+            // Nếu là admin, có thể xóa người dùng thường
+            $student = Student::where('student_id', $user->student_id)->first();
+            if ($student) {
+                $student->delete(); // Xóa bản ghi trong bảng students
+            }
+
+            // Xóa bản ghi trong bảng users
+            $user->delete();
+            return redirect()->route('admin.managers.index')->with('success', 'Người dùng đã được xóa.');
         }
 
-        // Tìm bản ghi liên quan trong bảng students và xóa
-        $student = Student::where('student_id', $user->student_id)->first(); // Giả sử bạn có trường student_id trong bảng users
-        if ($student) {
-            $student->delete(); // Xóa bản ghi trong bảng students
-        }
-
-        // Xóa bản ghi trong bảng users
-        $user->delete();
-        return redirect()->route('admin.managers.index')->with('success', 'Quản lý đã được xóa.');
+        // Nếu không phải admin hoặc admin chủ, không có quyền xóa
+        return redirect()->route('admin.managers.index')->with('error', 'Bạn không có quyền thực hiện hành động này.');
     }
 
-    public function edit($id)
+    public function edit($user_id)
     {
-        $student = Student::findOrFail($id);
+        $student = Student::where('user_id', $user_id)->first();
+
+        if (!$student) {
+            return redirect()->route('admin.managers.index')->with('error', 'Sinh viên không tồn tại.');
+        }
+
         return view('admin.managers.edit', compact('student'));
     }
 
@@ -266,13 +339,19 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:students,email,' . $id,
             'phone' => 'nullable|string|max:15', // Số điện thoại
-            'class' => 'nullable|string|max:100', // Lớp
-            'department' => 'nullable|string|max:100', // Khoa
+            'joining_date' => 'nullable|date', // ngày vào đoàn
+            'card_issuing_place' => 'nullable|string|max:100', // nơi cấp thẻ
             'role' => 'required|in:user,admin', // Quyền
         ]);
 
         $student = Student::findOrFail($id);
-        $student->update($request->only(['name', 'email', 'phone', 'class', 'department']));
+
+        // Cập nhật thông tin sinh viên
+        $student->update($request->only(['name', 'email', 'phone', 'joining_date', 'card_issuing_place']));
+
+        // Nếu bạn cần cập nhật quyền, bạn cũng nên thêm nó vào đây
+        $student->role = $request->role; // Cập nhật quyền
+        $student->save();
 
         return redirect()->route('admin.managers.index')->with('success', 'Thông tin sinh viên đã được cập nhật.');
     }

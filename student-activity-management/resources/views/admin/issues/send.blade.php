@@ -53,7 +53,7 @@
                             <td>{{ $student->student_id }}</td>
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->class }}</td>
-                            <td>{{ $student->department }}</td>
+                            <td>{{ $student->card_issuing_place }}</td>
                             <td>{{ $student->email }}</td>
                         </tr>
                         @endforeach
@@ -88,8 +88,6 @@
                             </th>
                             <th>Mã Sinh Viên</th>
                             <th>Tên</th>
-                            <th>Lớp</th>
-                            <th>Khoa</th>
                             <th>Email</th>
                         </tr>
                     </thead>
@@ -101,8 +99,6 @@
                             </td>
                             <td>{{ $student->student_id }}</td>
                             <td>{{ $student->name }}</td>
-                            <td>{{ $student->class }}</td>
-                            <td>{{ $student->department }}</td>
                             <td>{{ $student->email }}</td>
                         </tr>
                         @endforeach

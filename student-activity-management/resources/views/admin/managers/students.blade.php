@@ -31,10 +31,10 @@
                 <th>STT</th>
                 <th>Tên</th>
                 <th>Email</th>
-                <th>Mã sinh viên</th>
+                <th>Mã đoàn viên</th>
                 <th>Phone</th>
-                <th>Lớp</th>
-                <th>Khoa</th>
+                <th>Ngày vào đoàn</th>
+                <th>Nơi cấp thẻ đoàn</th>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +45,8 @@
                 <td>{!! highlight($student->email, request('search')) !!}</td>
                 <td>{{ $student->student_id }}</td>
                 <td>{{ $student->phone }}</td>
-                <td>{{ $student->class }}</td>
-                <td>{{ $student->department }}</td>
+                <td>{{ $student->joining_date }}</td>
+                <td>{{ $student->card_issuing_place }}</td>
             </tr>
             @endforeach
         </tbody>

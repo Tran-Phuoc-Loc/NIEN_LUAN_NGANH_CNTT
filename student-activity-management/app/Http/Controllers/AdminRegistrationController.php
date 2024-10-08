@@ -56,7 +56,6 @@ class AdminRegistrationController extends Controller
                         'full_name' => $full_name,
                         'email' => $email,
                         'phone' => $phone,
-                        'department' => 'Không xác định',
                         'batch' => 'Không xác định',
                     ]
                 );

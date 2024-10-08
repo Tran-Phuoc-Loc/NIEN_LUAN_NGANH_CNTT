@@ -6,7 +6,7 @@
 
     <form action="{{ route('admin.managers.update', $student->id) }}" method="POST">
         @csrf
-        @method('POST')
+        @method('PUT')
 
         <div class="mb-3">
             <label for="name" class="form-label">Tên</label>
@@ -24,13 +24,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="class" class="form-label">Lớp</label>
-            <input type="text" class="form-control" id="class" name="class" value="{{ $student->class }}">
+            <label for="joining_date" class="form-label">Ngày vào đoàn</label>
+            <input type="date" class="form-control" id="joining_date" name="joining_date" value="{{ $student->joining_date }}">
         </div>
 
         <div class="mb-3">
-            <label for="department" class="form-label">Khoa</label>
-            <input type="text" class="form-control" id="department" name="department" value="{{ $student->department }}">
+            <label for="card_issuing_place" class="form-label">Nơi cấp thẻ đoàn</label>
+            <input type="text" class="form-control" id="card_issuing_place" name="card_issuing_place" value="{{ $student->card_issuing_place }}">
         </div>
 
         <div class="mb-3">

@@ -39,9 +39,7 @@ class RegistrationController extends Controller
             'full_name' => 'required|string|max:255',
             'email' => 'required|email',
             'phone' => 'nullable|string|max:15',
-            'department' => 'required|string|max:255',
             'student_id' => 'required|string|max:255',
-            'batch' => 'required|string|max:10',
         ]);
 
         $studentId = Auth::user()->student_id;
@@ -51,8 +49,6 @@ class RegistrationController extends Controller
             'full_name' => $request->full_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'department' => $request->department,
-            'batch' => $request->batch,
             'activity_id' => $activity->id,
         ]);
 

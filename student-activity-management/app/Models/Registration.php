@@ -13,7 +13,6 @@ class Registration extends Model
         'full_name',
         'email',
         'phone',
-        'department',
         'batch',
     ];
 

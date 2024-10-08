@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Student extends Model
 {
@@ -11,11 +12,12 @@ class Student extends Model
 
     protected $fillable = [
         'student_id',
+        'user_id',
         'name',
         'email',
         'phone',
-        'class',
-        'department',
+        'joining_date',
+        'card_issuing_place',
     ];
 
     public function user()
@@ -27,4 +29,11 @@ class Student extends Model
     {
         return $this->hasMany(Registration::class, 'user_id', 'id');
     }
+
+    // protected $dates = ['joining_date'];
+
+    // public function setJoiningDateAttribute($value)
+    // {
+    //     $this->attributes['joining_date'] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+    // }
 }

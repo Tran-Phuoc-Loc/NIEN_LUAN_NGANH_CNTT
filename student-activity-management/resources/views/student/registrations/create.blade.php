@@ -31,38 +31,6 @@
             </div>
 
             <div class="mb-4">
-                <label for="batch" class="form-label fw-bold">Khóa</label>
-                <select name="batch" id="batch" class="form-select form-select-lg rounded-pill" required>
-                    <option value="">Chọn khóa</option>
-                    <option value="K44">K44</option>
-                    <option value="K45">K45</option>
-                    <option value="K46">K46</option>
-                    <option value="K47">K47</option>
-                    <option value="K48">K48</option>
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label for="department" class="form-label fw-bold">Khoa</label>
-                <input type="text" name="department" id="department" class="form-control form-control-lg rounded-pill" value="{{ old('department', $user->department) }}" required placeholder="Nhập khoa của bạn">
-                @error('department')
-                <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="batch" class="form-label fw-bold">Khóa</label>
-                <select name="batch" id="batch" class="form-select form-select-lg rounded-pill" required>
-                    <option value="">Chọn khóa</option>
-                    <option value="2023-1">2023 - Kỳ 1</option>
-                    <option value="2023-2">2023 - Kỳ 2</option>
-                    <option value="2024-1">2024 - Kỳ 1</option>
-                    <option value="2024-2">2024 - Kỳ 2</option>
-                    <option value="2024-3">2025 - Kỳ 1  </option>
-                </select>
-            </div>
-
-            <div class="mb-4">
                 <label for="email" class="form-label fw-bold">Email</label>
                 <input type="email" name="email" id="email" class="form-control form-control-lg rounded-pill bg-light" value="{{ $user->email }}" readonly>
             </div>

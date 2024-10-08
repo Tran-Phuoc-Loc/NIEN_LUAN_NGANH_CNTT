@@ -15,8 +15,8 @@
             
             @if($student)
             <p><strong>Số điện thoại:</strong> {{ $student->phone }}</p>
-            <p><strong>Lớp:</strong> {{ $student->class }}</p>
-            <p><strong>Khoa:</strong> {{ $student->department }}</p>
+            <p><strong>Ngày vào đoàn:</strong> {{ $student->joining_date }}</p>
+            <p><strong>Nơi cấp thẻ đoàn:</strong> {{ $student->card_issuing_place }}</p>
             @else
             <p>Thông tin sinh viên không có.</p>
             @endif

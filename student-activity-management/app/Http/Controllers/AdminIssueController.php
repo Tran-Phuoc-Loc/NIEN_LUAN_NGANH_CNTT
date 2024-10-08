@@ -7,14 +7,29 @@ use App\Models\StudentIssue;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Notification;
+use Illuminate\Support\Facades\DB;
 
 class AdminIssueController extends Controller
 {
     // Hiển thị tất cả vấn đề của học sinh
     public function index()
     {
-        $studentIssues = StudentIssue::orderBy('created_at', 'desc')->paginate(10); // Paginate the results
-        return view('admin.issues.index', compact('studentIssues'));
+        // Lấy danh sách vấn đề từ sinh viên (chưa xử lý và đã xử lý)
+        $studentIssues = StudentIssue::orderBy('created_at', 'desc')->paginate(10);
+
+        // Lấy danh sách thông báo của admin, nhóm theo nội dung thông báo (message)
+        $adminNotifications = Notification::where('is_admin', 1)
+            ->select(DB::raw('MIN(id) as id'), 'message', 'created_at', DB::raw('count(*) as total')) // Lấy id nhỏ nhất
+            ->groupBy('message', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // $adminNotifications = Notification::where('is_admin', 1)
+        //     ->orderBy('created_at', 'desc')
+        //     ->paginate(10);
+
+
+        return view('admin.issues.index', compact('studentIssues', 'adminNotifications'));
     }
 
     // Phương thức xử lý vấn đề
@@ -41,7 +56,7 @@ class AdminIssueController extends Controller
         // Kiểm tra nếu người dùng không nhập từ khóa tìm kiếm
         if (!$request->has('search') || trim($request->search) === '') {
             // Trả về danh sách tất cả sinh viên
-            $allStudents =  Student::paginate(10); 
+            $allStudents =  Student::paginate(10);
             return view('admin.issues.send', ['allStudents' => $allStudents]);
         }
 
@@ -83,21 +98,40 @@ class AdminIssueController extends Controller
 
         // Kiểm tra xem có gửi đến tất cả sinh viên không
         if ($request->has('send_to_all')) {
-            // Lấy tất cả sinh viên
-            $students = Student::all();
+            // Sử dụng chunk để xử lý từng nhóm sinh viên thay vì tất cả cùng lúc
+            Student::chunk(100, function ($students) use ($request) {
+                foreach ($students as $student) {
+                    Notification::create([
+                        'student_id' => $student->id,
+                        'message' => $request->message,
+                        'is_admin' => true,
+                        'send_to_all' => true,
+                    ]);
+                }
+            });
         } else {
             // Lấy sinh viên được chọn
             $students = Student::whereIn('id', $request->student_ids)->get();
-        }
 
-        // Lưu thông báo cho từng sinh viên
-        foreach ($students as $student) {
-            Notification::create([
-                'student_id' => $student->id,
-                'message' => $request->message,
-            ]);
+            // Lưu thông báo cho từng sinh viên
+            foreach ($students as $student) {
+                Notification::create([
+                    'student_id' => $student->id,
+                    'message' => $request->message,
+                    'is_admin' => true,
+                    'send_to_all' => false,
+                ]);
+            }
         }
 
         return redirect()->route('admin.issues.index')->with('success', 'Thông báo đã được gửi thành công đến sinh viên!');
+    }
+
+    public function destroy($id)
+    {
+        $notification = Notification::findOrFail($id); // Tìm thông báo theo ID
+        $notification->delete(); // Xóa thông báo
+
+        return redirect()->back()->with('success', 'Thông báo đã được xóa thành công!');
     }
 }

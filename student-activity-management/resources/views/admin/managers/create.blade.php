@@ -42,12 +42,12 @@
                     <input type="text" id="phone_1" name="phone[]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="class_1">Lớp</label>
-                    <input type="text" id="class_1" name="class[]" class="form-control" required>
+                    <label for="joining_date_1">Ngày vào đoàn</label>
+                    <input type="date" id="joining_date_1" name="joining_date[]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="department_1">Khoa</label>
-                    <input type="text" id="department_1" name="department[]" class="form-control" required>
+                    <label for="card_issuing_place_1">Nơi cấp thẻ đoàn</label>
+                    <input type="text" id="card_issuing_place_1" name="card_issuing_place[]" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="password_1">Mật Khẩu</label>

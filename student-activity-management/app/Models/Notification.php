@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
-    protected $fillable = ['student_id', 'message']; // Các trường có thể gán
+    protected $fillable = ['student_id', 'message', 'is_admin']; // Các trường có thể gán
 }

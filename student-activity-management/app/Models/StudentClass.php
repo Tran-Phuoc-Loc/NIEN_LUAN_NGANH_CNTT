@@ -12,10 +12,10 @@ class StudentClass extends Model
     protected $table = 'student_classes'; // Đổi tên bảng nếu cần
 
     // Các thuộc tính có thể được gán hàng loạt
-    protected $fillable = [
-        'name',
-        'department_id', // Nếu lớp thuộc về một khoa
-    ];
+    // protected $fillable = [
+    //     'name',
+    //     'department_id', // Nếu lớp thuộc về một khoa
+    // ];
 
     // Quan hệ với sinh viên
     public function students()

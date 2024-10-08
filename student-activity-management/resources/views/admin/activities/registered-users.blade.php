@@ -26,8 +26,6 @@
                 <th>Tên Sinh Viên</th>
                 <th>Email</th>
                 <th>Điện Thoại</th>
-                <th>Khoa</th>
-                <th>Khóa</th>
                 <th>Ngày Đăng Ký</th>
                 <th>Check</th>
             </tr>
@@ -39,8 +37,6 @@
                 <td>{{ $registration->full_name }}</td>
                 <td>{{ $registration->email }}</td>
                 <td>{{ $registration->phone }}</td>
-                <td>{{ $registration->department }}</td>
-                <td>{{ $registration->batch }}</td>
                 <td>{{ $registration->created_at->format('d/m/Y H:i:s') }}</td>
                 <td>
                     @if($registration->check)
