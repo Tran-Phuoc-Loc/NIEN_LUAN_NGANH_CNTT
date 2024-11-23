@@ -1,9 +1,9 @@
 @extends('layouts.student')
 
 @section('content')
-<div class="container mt-4">
-    <!-- Marquee thông báo -->
-    <div class="alert alert-primary marquee text-center shadow-sm">
+<div class="container pt-1">
+    <!-- Thông báo marquee -->
+    <div class="alert marquee shadow-sm text-center rounded-3">
         @if($upcoming_activities->isNotEmpty())
         <p>🎉 <strong>Lịch hoạt động mới</strong> đã được cập nhật. Xem ngay!</p>
         @else
@@ -11,185 +11,189 @@
         @endif
     </div>
 
-    <!-- Nút chuyển đổi form -->
-    <button id="toggleFormBtn" class="btn btn-info mb-3 shadow">
-        Gửi thắc mắc của bạn
-    </button>
-
-    <!-- Form gửi thắc mắc của sinh viên -->
-    <div class="card shadow-sm" id="issueForm" style="display: none;">
-        <div class="card-header bg-info text-white">Gửi thắc mắc của bạn:</div>
-        <div class="card-body">
-            <form action="{{ route('student.issues.store') }}" method="POST">
-                @csrf
-                <div class="mb-3">
-                    <label for="message" class="form-label">Nội dung thắc mắc:</label>
-                    <textarea class="form-control issue-textarea" id="message" name="message" rows="3" required></textarea>
+    <!-- Carousel -->
+    <div id="activityCarousel" class="carousel slide mb-4 shadow rounded-3 overflow-hidden" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @foreach($carousel_images as $index => $image)
+            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                <img src="{{ asset('storage/' . $image->path) }}" class="d-block w-100" style="max-height: 500px; object-fit: cover;" alt="{{ $image->description ?? 'Hình ảnh hoạt động' }}">
+                <div class="carousel-caption bg-dark bg-opacity-50 p-3 rounded">
+                    <h5 class="text-white">{{ $image->title ?? '' }}</h5>
                 </div>
-                <button type="submit" class="btn btn-primary">Gửi</button>
-            </form>
-            @if(session('success'))
-            <div class="alert alert-success mt-3">
-                {{ session('success') }}
             </div>
-            @endif
+            @endforeach
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </div>
 
-    <!-- Hoạt động sắp tới -->
-    <div class="row mt-4">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">Hoạt động sắp tới</div>
+
+    <div class="row g-4">
+        <!-- Hoạt động sắp tới -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 rounded-4" style="overflow: hidden;">
+                <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #56ab2f, #a8e063);">
+                    <i class="bi bi-calendar2-event"></i> Hoạt động sắp tới
+                </div>
                 <div class="card-body">
-                    @if($upcoming_activities->isEmpty())
-                    <p>Không có hoạt động nào sắp tới.</p>
+                    @php
+                    // Lọc hoạt động có thời gian đăng ký hợp lệ
+                    $validActivities = $upcoming_activities->filter(function($activity) {
+                    return $activity->registration_end && \Carbon\Carbon::now()->lessThanOrEqualTo($activity->registration_end);
+                    });
+                    @endphp
+
+                    @if($validActivities->isEmpty())
+                    <p class="text-center text-muted"><i class="bi bi-info-circle"></i> Không có hoạt động nào sắp tới.</p>
                     @else
-                    @foreach ($upcoming_activities->take(3) as $activity)
-                    <div class="activity mb-3">
-                        <h5>
-                            <a href="{{ route('activities.show', ['id' => $activity->id]) }}" class="text-decoration-none">
+                    @foreach ($validActivities->take(3) as $activity)
+                    <div class="activity-item mb-4">
+                        <h6>
+                            <a href="{{ route('activities.show', ['id' => $activity->id]) }}" class="text-decoration-none text-dark fw-bold">
                                 {{ $activity->name }}
                             </a>
-                        </h5>
-                        <p>Ngày: <strong>{{ $activity->date->format('d/m/Y') }}</strong></p>
-                        <p>Địa điểm: <strong>{{ $activity->location }}</strong></p>
-                        @if($activity->registration_start <= now() && $activity->registration_end >= now())
-                        <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-outline-success btn-sm">Đăng ký</a>
+                        </h6>
+                        <p class="small text-muted">
+                            <i class="bi bi-calendar-event"></i> {{ $activity->date->format('d/m/Y') }}
+                            <br>
+                            <i class="bi bi-geo-alt"></i> {{ $activity->location }}
+                        </p>
+                        @if (\Carbon\Carbon::now()->lessThanOrEqualTo($activity->registration_end))
+                        <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-outline-success btn-sm shadow-sm">Đăng ký</a>
                         @else
-                        <button class="btn btn-outline-secondary btn-sm" disabled>
-                            @if($activity->registration_start > now()) Chưa đến thời gian đăng ký
-                            @else Hết hạn đăng ký
-                            @endif
-                        </button>
+                        <span class="text-danger small"><i class="bi bi-x-circle"></i> Hết hạn đăng ký</span>
                         @endif
                     </div>
                     @endforeach
-                    <a href="{{ route('activities.index') }}" class="btn btn-link">Xem tất cả hoạt động</a>
+                    <a href="{{ route('activities.index') }}" class="btn btn-link text-success d-block text-center mt-3">Xem tất cả</a>
                     @endif
+
                 </div>
             </div>
         </div>
 
-        <!-- Thống kê hoạt động đã tham gia -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">Hoạt động đã tham gia</div>
+
+        <!-- Hoạt động đã tham gia -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #36d1dc, #5b86e5);">
+                    <i class="bi bi-check-circle"></i> Hoạt động đã tham gia
+                </div>
                 <div class="card-body">
                     @if(!empty($participated_activities))
-                    <ul>
+                    <ul class="list-unstyled">
                         @foreach($participated_activities as $activity)
-                        <li>{{ $activity }}</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> {{ $activity }}</li>
                         @endforeach
                     </ul>
                     @else
-                    <p>Bạn chưa tham gia hoạt động nào.</p>
+                    <p class="text-center text-muted"><i class="bi bi-x-circle"></i> Bạn chưa tham gia hoạt động nào.</p>
                     @endif
                 </div>
             </div>
         </div>
-        
-        <!-- Thông báo mới -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-warning text-white">Thông báo mới</div>
-                <div class="card-body">
+
+        <!-- Thông báo -->
+        <div class="col-lg-4">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header text-white text-center" style="background: linear-gradient(90deg, #f7971e, #ffd200);">
+                    <i class="bi bi-bell"></i> Thông báo
+                </div>
+                <div class="card-body p-3" style="max-height: 300px; overflow-y: auto;">
                     @if(isset($notifications) && $notifications->isEmpty())
-                    <div class="alert alert-info text-center">Không có thông báo nào mới.</div>
+                    <p class="text-center text-muted"><i class="bi bi-info-circle"></i> Không có thông báo nào mới.</p>
                     @else
-                    @foreach ($notifications as $notification)
-                    <a href="{{ route('student.issues.index') }}" class="text-decoration-none">
-                        <div class="alert alert-info">{{ $notification['message'] }}</div>
-                    </a>
-                    @endforeach
+                    <ul class="list-unstyled">
+                        @foreach ($notifications as $notification)
+                        @php
+                        // Kiểm tra nếu thông báo là mới (ví dụ, trong vòng 24 giờ) và chưa đọc
+                        $hasNewNotifications = $notifications->filter(function($notification) {
+                        // Sử dụng Carbon để kiểm tra thời gian tạo thông báo
+                        return \Carbon\Carbon::parse($notification->created_at)->diffInHours(now()) < 24 && !$notification->is_read;
+                            })->isNotEmpty();
+                            @endphp
+
+                            <li class="d-flex align-items-center mb-2">
+                                <i class="bi bi-envelope {{ $notification->is_read ? 'text-muted' : 'text-primary' }} me-2"></i>
+                                <a href="{{ route('student.issues.index') }}" class="text-decoration-none text-dark d-flex justify-content-between w-100">
+                                    <!-- Giới hạn nội dung thông báo bằng limit() -->
+                                    <span class="{{ $hasNewNotifications ? 'text-danger' : '' }}">
+                                        {{ \Illuminate\Support\Str::limit($notification['message'], 10, '...') }}
+                                    </span>
+                                    <small class="text-muted ms-2" style="white-space: nowrap;">
+                                        {{ \Carbon\Carbon::parse($notification['created_at'])->diffForHumans() }}
+                                    </small>
+                                </a>
+                                <!-- Nút để đánh dấu thông báo là đã đọc -->
+                                @if(!$notification->is_read)
+                                <form action="{{ route('student.issues.markAsRead', $notification->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Đánh dấu là đã đọc</button>
+                                </form>
+                                @endif
+                            </li>
+                            @endforeach
+                    </ul>
                     @endif
                 </div>
             </div>
         </div>
+
+
+
     </div>
 </div>
+
+<!-- CSS -->
 <style>
-    /* Button Styling */
-    #toggleFormBtn {
-        background-color: #17a2b8;
-        padding: 8px 16px;
+    .marquee {
+        background-color: #f8f9fa;
+        font-size: 18px;
+        padding: 10px;
+        border-left: 4px solid #007bff;
         border-radius: 5px;
-        transition: background-color 0.3s;
-        font-size: 14px;
     }
 
-    #toggleFormBtn:hover {
-        background-color: #138496;
+    .carousel .carousel-caption {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 15px;
+        border-radius: 10px;
     }
 
-    /* Card Styling */
+    .btn {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
     .card {
-        margin-bottom: 20px;
-        transition: transform 0.2s;
+        transition: all 0.3s ease-in-out;
     }
 
     .card:hover {
-        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transform: translateY(-5px);
     }
 
-    /* Textarea Styling */
-    .issue-textarea {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 5px;
-        width: 100%;
-        font-size: 14px;
-        transition: border-color 0.3s ease;
-    }
-
-    .issue-textarea:focus {
-        border-color: #007bff;
-        outline: none;
-    }
-
-    /* Submit Button Styling */
-    .issue-submit-btn {
-        background-color: #007bff;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 4px;
-        width: 100%;
-        border: none;
-        font-size: 14px;
-        transition: background-color 0.3s;
-    }
-
-    .issue-submit-btn:hover {
-        background-color: #0056b3;
-    }
-
-    /* Success Alert Styling */
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 5px;
-        border-radius: 4px;
-        font-size: 12px;
-    }
-
-    /* Marquee Styling */
-    .marquee {
-        padding: 10px;
-        background-color: #f0f8ff;
-        border: 1px solid #007bff;
-        border-radius: 5px;
-        font-size: 18px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: scroll 25s linear infinite;
-    }
-
-    @keyframes scroll {
-        0% { transform: translateX(100%); }
-        100% { transform: translateX(-100%); }
+    .notification-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* Hiển thị tối đa 2 dòng */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        /* Để chữ có thể xuống dòng */
+        max-width: 85%;
+        /* Chiếm 85% không gian */
+        font-size: 0.9rem;
+        /* Điều chỉnh kích thước chữ nếu cần */
     }
 </style>
-
 @endsection

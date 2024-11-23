@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminActivityController;
 use App\Http\Controllers\AdminIssueController;
 use App\Http\Controllers\AdminRegistrationController;
+use App\Http\Controllers\AdminCarouselController;
 
 
 // Route cho login
@@ -29,11 +30,18 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/managers/students', [AdminController::class, 'showStudents'])->name('admin.students');
 
+    Route::post('/admin/carousel/store', [AdminCarouselController::class, 'store'])->name('admin.carousel.store');
+    Route::get('admin/students/{id}', [AdminController::class, 'show'])->name('admin.managers.show');
+
     Route::get('admin/issues', [AdminIssueController::class, 'index'])->name('admin.issues.index');
     Route::get('admin/issues/send', [AdminIssueController::class, 'send'])->name('admin.issues.send');
     Route::post('admin/issues/send', [AdminIssueController::class, 'storeSend'])->name('admin.issues.storeSend');
     Route::get('admin/issues/{id}/resolve', [AdminIssueController::class, 'resolve'])->name('admin.issues.resolve');
     Route::delete('/admin/issues/{id}', [AdminIssueController::class, 'destroy'])->name('admin.issues.destroy');
+    Route::delete('/admin/notifications/delete-all', [AdminIssueController::class, 'destroyAll'])->name('admin.notifications.destroyAll');
+
+
+
 
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
     Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
@@ -73,12 +81,15 @@ Route::middleware('auth')->group(function () {
     // Route cho người dùng gửi thắc mắc
     Route::post('student/issues', [IssueController::class, 'store'])->name('student.issues.store');
 
-    // routes/web.php
+    // routes
     Route::get('/news', [NewsController::class, 'index'])->name('student.news.index');
     Route::get('/news/{id}', [NewsController::class, 'show'])->name('student.news.show');
 
+    Route::get('/profile/edit', [StudentController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [StudentController::class, 'update'])->name('profile.update');
 
     Route::get('/issues', [IssueController::class, 'index'])->name('student.issues.index');
+    Route::post('/issues/{id}/mark-as-read', [IssueController::class, 'markAsRead'])->name('student.issues.markAsRead');
 
     // Route cho Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');

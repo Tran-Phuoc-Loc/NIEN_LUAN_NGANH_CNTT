@@ -17,13 +17,12 @@ class Registration extends Model
     ];
 
     public function student()
-{
-    return $this->belongsTo(Student::class, 'student_id', 'student_id');
-}
+    {
+        return $this->belongsTo(Student::class, 'student_id', 'student_id');
+    }
 
-public function activity()
-{
-    return $this->belongsTo(Activity::class);
-}
-
+    public function activity()
+    {
+        return $this->belongsTo(Activity::class, 'activity_id');
+    }
 }

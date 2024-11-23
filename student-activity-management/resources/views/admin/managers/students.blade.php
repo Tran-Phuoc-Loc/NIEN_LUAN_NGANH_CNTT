@@ -35,6 +35,7 @@
                 <th>Phone</th>
                 <th>Ngày vào đoàn</th>
                 <th>Nơi cấp thẻ đoàn</th>
+                <th>Tùy chọn</th>
             </tr>
         </thead>
         <tbody>
@@ -47,6 +48,7 @@
                 <td>{{ $student->phone }}</td>
                 <td>{{ $student->joining_date }}</td>
                 <td>{{ $student->card_issuing_place }}</td>
+                <td><a href="{{ route('admin.managers.show', $student->user_id) }}" class="btn btn-info btn-sm">Xem chi tiết</a></td>
             </tr>
             @endforeach
         </tbody>

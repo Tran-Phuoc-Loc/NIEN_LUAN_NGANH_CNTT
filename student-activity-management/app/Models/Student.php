@@ -18,6 +18,7 @@ class Student extends Model
         'phone',
         'joining_date',
         'card_issuing_place',
+        'avatar'
     ];
 
     public function user()
@@ -40,4 +41,12 @@ class Student extends Model
     // {
     //     $this->attributes['joining_date'] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
     // }
+
+    // Quan hệ nhiều-nhiều thông qua bảng 'registrations'
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'unregistered_attendances', 'student_id', 'activity_id')
+                    ->withPivot('check', 'created_at', 'updated_at')
+                    ->wherePivot('check', 1); // Lọc chỉ những hoạt động đã tham gia
+    }
 }

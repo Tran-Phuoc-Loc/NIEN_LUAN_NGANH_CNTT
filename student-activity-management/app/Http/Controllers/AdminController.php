@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Jobs\UpdateStudentUserId;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -23,15 +24,15 @@ class AdminController extends Controller
         $visibleActivitiesCount = Activity::where('is_hidden', 0)->count(); // Đếm số hoạt động không ẩn
         $recentActivities = Activity::withCount('registrations')->latest()->take(3)->get();
         $studentIssues = StudentIssue::orderBy('created_at', 'desc')->take(5)->get();
-    
+
         // Lấy dữ liệu cho biểu đồ hoạt động
         $activities = Activity::withCount('registrations')->get(); // Lấy tất cả hoạt động cùng với số lượng người tham gia
         $activityData = $activities->pluck('registrations_count'); // Lấy số lượng người tham gia
         $activityLabels = $activities->pluck('name'); // Lấy tên hoạt động
-    
+
         return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities', 'studentIssues', 'activityData', 'activityLabels'));
     }
-    
+
 
     // Hiển thị form thêm sinh viên
     public function create()
@@ -196,13 +197,35 @@ class AdminController extends Controller
         return view('admin.managers.students', compact('students'));
     }
 
-    // public function showDashboard()
-    // {
-    //     $months = ['January', 'February', 'March', 'April', 'May']; // Thay thế bằng dữ liệu thực tế
-    //     $registrations = [10, 20, 15, 30, 25]; // Thay thế bằng dữ liệu thực tế
+    public function show($userId)
+    {
+        // Tìm thông tin sinh viên dựa trên user_id
+        $student = Student::where('user_id', $userId)->firstOrFail(); // Tìm bản ghi sinh viên với user_id
 
-    //     return view('admin.dashboard', compact('months', 'registrations'));
-    // }
+        // Lấy giá trị student_id từ bản ghi sinh viên
+        $studentId = $student->student_id;
+
+        // Lấy danh sách tham gia từ bảng unregistered_attendances
+        $participatedActivities = DB::table('unregistered_attendances as ua')
+            ->join('activities as a', 'ua.activity_id', '=', 'a.id')
+            ->where('ua.student_id', $studentId)
+            ->select('ua.*', 'a.name as activity_name', 'a.date as activity_date', 'a.description') // Thêm description
+            ->get();
+
+
+        // Xử lý dữ liệu tham gia
+        $participated_activities = $participatedActivities->map(function ($activity) {
+            return (object) [
+                'activity_name' => $activity->activity_name,
+                'activity_date' => $activity->activity_date,
+                'description' => $activity->description,
+            ];
+        })->toArray();
+
+        // Trả về view
+        return view('admin.managers.show', compact('student', 'participated_activities'));
+    }
+
 
     // Hiển thị danh sách người dùng
     public function showUsers(Request $request)

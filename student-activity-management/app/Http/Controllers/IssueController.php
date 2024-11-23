@@ -11,12 +11,14 @@ class IssueController extends Controller
 {
     public function index()
     {
+        // Lấy thông tin người dùng hiện tại
+        $user = Auth::user()->student;
         // Lấy danh sách thông báo của sinh viên
         $notifications = Notification::where('user_id', Auth::id())->orderBy('created_at', 'desc')
         ->get();
 
         // Chuyển hướng đến view
-        return view('student.issues.index', compact('notifications'));
+        return view('student.issues.index', compact('notifications'))->with('student', $user);
     }
 
     public function store(Request $request)
@@ -41,4 +43,16 @@ class IssueController extends Controller
         // Chuyển hướng sau khi lưu thành công
         return redirect()->back()->with('success', 'Câu hỏi của bạn đã được gửi.');
     }
+     // Đánh dấu thông báo là đã đọc
+     public function markAsRead($notificationId)
+     {
+         $notification = Notification::findOrFail($notificationId);
+ 
+         if (!$notification->is_read) {
+             $notification->is_read = true;
+             $notification->save();
+         }
+ 
+         return redirect()->route('student.issues.index');
+     }
 }

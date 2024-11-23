@@ -10,6 +10,8 @@
     <!-- Link Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Link CSS -->
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
@@ -109,16 +111,8 @@
     .sidebar {
         width: 250px;
         /* Chiều rộng của thanh điều hướng */
-        background-color: #343a40;
-        /* Màu nền của thanh điều hướng */
         color: white;
         /* Màu chữ */
-        position: fixed;
-        /* Cố định bên trái */
-        height: 100%;
-        /* Chiều cao bằng toàn bộ màn hình */
-        overflow-y: auto;
-        /* Thêm thanh cuộn nếu cần */
     }
 
     .content {
@@ -130,191 +124,283 @@
         /* Chiếm phần còn lại */
     }
 
-    /* Điều chỉnh khoảng cách và vị trí của dropdown trong sidebar */
-    .sidebar .dropdown-menu {
-        position: static;
-        /* Không chồng lên các phần tử khác */
-        margin-top: 0;
-        /* Giảm khoảng cách với dropdown-toggle */
-    }
-
-    .sidebar .nav-item.dropdown:hover .dropdown-menu {
-        display: block;
-        margin-bottom: 10px;
-        /* Đẩy phần tử dưới xuống */
+    .group-header {
+        background-color: #495057;
+        /* Màu nền khác biệt */
+        color: #8c78f3 !important;
+        /* Màu chữ sáng */
+        padding: 8px 15px;
+        /* Khoảng cách bên trong */
+        margin-top: 10px;
+        /* Khoảng cách phía trên */
+        border-radius: 5px;
+        /* Góc bo tròn */
+        font-weight: bold;
+        /* Chữ đậm */
+        text-transform: uppercase;
+        /* Chữ in hoa */
     }
 </style>
 
-<body>
-    <div class="admin-wrapper d-flex">
-        <div class="sidebar">
-            <header class="bg-dark text-white p-3">
-                <div class="container">
-                    <nav class="navbar navbar-expand-lg navbar-dark">
-                        <a class="navbar-brand" href="{{ route('admin.dashboard') }}">Admin Panel</a>
-                    </nav>
-                </div>
-            </header>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.students') }}">Danh sách sinh viên</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="activitiesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Quản lý Hoạt động
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="activitiesDropdown">
-                        <li><a class="dropdown-item" href="{{ route('admin.activities.index') }}">Danh sách Hoạt động</a></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.activities.create') }}">Thêm Hoạt động</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.managers.index') }}">Quản lý Thành viên</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="issuesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Quản lý Thông báo
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="issuesDropdown">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('admin.issues.index') }}">Danh sách Thông báo</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('admin.issues.send') }}">Tạo Thông báo</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.news.index') }}">Tin tức</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                </li>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </ul>
-        </div>
+<body style="background-color:#f1f5f9;">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Nút mở/đóng Sidebar (chỉ hiển thị trên màn hình nhỏ) -->
+            <button id="toggleSidebar" class="btn btn-dark d-md-none" style="position: fixed; top: 10px; left: 10px; z-index: 1100;">
+                ☰
+            </button>
 
-        <div class="content">
-            <div class="container">
-                @yield('content')
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar bg-dark" style="position: fixed; height: 100%; overflow-y: auto;">
+                <div class="position-sticky">
+                    <!-- Header -->
+                    <h4 class="text-center text-light py-3">Admin Dashboard</h4>
+
+                    <!-- Thông tin người dùng -->
+                    <div class="user-info text-center mb-4">
+                        @if(auth()->check())
+                        <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('storage/students/avatars/default_avatar.png') }}"
+                            alt="Profile of {{ auth()->user()->username }}"
+                            class="rounded-circle" style="width: 70px; height: 75px;">
+                        <h5 class="mt-2 text-white">{{ auth()->user()->username }}</h5>
+                        <h6 class="text-secondary">{{ auth()->user()->email }}</h6>
+                        <hr class="bg-secondary" style="margin: 10px 0;">
+                        @endif
+                    </div>
+
+                    <!-- Nhóm: Tổng quan -->
+                    <h6 class="text-light px-3 group-header">Tổng Quan</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.dashboard') }}">
+                                <i class="bi bi-house-door me-2"></i> Home
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Quản lý người dùng -->
+                    <h6 class="text-light px-3 group-header">Quản Lý Người Dùng</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.students') }}">
+                                <i class="bi bi-people me-2"></i> Danh sách sinh viên
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Quản lý hoạt động -->
+                    <h6 class="text-light px-3 group-header">Quản Lý Hoạt Động</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.activities.index') }}">
+                                <i class="bi bi-calendar-event me-2"></i> Danh sách Hoạt động
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.activities.create') }}">
+                                <i class="bi bi-plus-circle me-2"></i> Thêm Hoạt động
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Quản lý thành viên -->
+                    <h6 class="text-light px-3 group-header">Quản Lý Thành Viên</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.managers.index') }}">
+                                <i class="bi bi-person-badge me-2"></i> Thành viên
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Quản lý thông báo -->
+                    <h6 class="text-light px-3 group-header">Quản Lý Thông Báo</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.issues.index') }}">
+                                <i class="bi bi-bell me-2"></i> Danh sách Thông báo
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.issues.send') }}">
+                                <i class="bi bi-pencil-square me-2"></i> Tạo Thông báo
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Tin tức -->
+                    <h6 class="text-light px-3 group-header">Tin Tức</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('admin.news.index') }}">
+                                <i class="bi bi-newspaper me-2"></i> Tin tức
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="bg-secondary">
+
+                    <!-- Nhóm: Cài đặt & Đăng xuất -->
+                    <h6 class="text-light px-3 group-header">Cài Đặt & Hệ Thống</h6>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="#">
+                                <i class="bi bi-gear me-2"></i> Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light d-flex align-items-center" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-box-arrow-right me-2"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Footer -->
+                    <div class="text-center mt-4 mb-3 text-secondary">
+                        <img src="{{ asset('storage/images/bookicon.png') }}" alt="Footer icon" style="width: 50px;">
+                    </div>
+
+                    <!-- Form đăng xuất -->
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </nav>
+
+            <div class="content">
+                <div class="container">
+                    @yield('content')
+                </div>
             </div>
         </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        @if(isset($studentListData))
+        @php
+        // Đảm bảo rằng biến PHP được mã hóa đúng định dạng JSON
+        $studentListData = json_encode($studentListData);
+        @endphp
+        @else
+        @php
+        // Xử lý trường hợp không có dữ liệu (mảng rỗng)
+        $studentListData = json_encode([]);
+        @endphp
+        @endif
+        <script>
+            function showStudentList(notificationId) {
+                // An toàn khi phân tích cú pháp dữ liệu JSON vào biến JavaScript
+                var studentList = JSON.parse('{!! $studentListData !!}');
 
-    <script>
-        function showStudentList(notificationId) {
-            const studentList = @json($studentListData ?? []);
 
-            // Tìm phần tử modal dựa trên notificationId
-            const modalElement = document.getElementById('studentListModal' + notificationId);
-            if (!modalElement) {
-                console.error(`Không tìm thấy modal với ID: studentListModal${notificationId}`);
-                return;
-            }
-            console.log(`Đang cố gắng mở modal với ID: studentListModal${notificationId}`);
-
-            const students = studentList[notificationId] ? studentList[notificationId].students : [];
-            const studentListElement = modalElement.querySelector('.student-list'); // Sử dụng class để dễ nhận biết
-            studentListElement.innerHTML = ''; // Xóa nội dung cũ
-
-            students.forEach(student => {
-                const li = document.createElement('li');
-                li.textContent = `${student.name} (${student.email})`;
-                studentListElement.appendChild(li);
-            });
-
-            // Hiển thị modal
-            const modal = new bootstrap.Modal(modalElement);
-            modal.show();
-
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const sendToAll = document.getElementById('sendToAll');
-            const selectAllButton = document.getElementById('selectAllButton');
-
-            function toggleStudentSelection() {
-                const studentSelection = document.getElementById('studentSelection');
-                if (studentSelection) {
-                    studentSelection.style.display = sendToAll && sendToAll.checked ? 'none' : 'block';
+                // Tìm phần tử modal dựa trên notificationId
+                const modalElement = document.getElementById('studentListModal' + notificationId);
+                if (!modalElement) {
+                    console.error(`Không tìm thấy modal với ID: studentListModal${notificationId}`);
+                    return;
                 }
+                console.log(`Đang cố gắng mở modal với ID: studentListModal${notificationId}`);
+
+                const students = studentList[notificationId] ? studentList[notificationId].students : [];
+                const studentListElement = modalElement.querySelector('.student-list'); // Sử dụng class để dễ nhận biết
+                studentListElement.innerHTML = ''; // Xóa nội dung cũ
+
+                students.forEach(student => {
+                    const li = document.createElement('li');
+                    li.textContent = `${student.name} (${student.email})`;
+                    studentListElement.appendChild(li);
+                });
+
+                // Hiển thị modal
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                console.log(studentList);
             }
 
-            toggleStudentSelection();
+            document.addEventListener('DOMContentLoaded', function() {
+                const sendToAll = document.getElementById('sendToAll');
+                const selectAllButton = document.getElementById('selectAllButton');
 
-            if (sendToAll) {
-                sendToAll.addEventListener('change', toggleStudentSelection);
-            }
+                function toggleStudentSelection() {
+                    const studentSelection = document.getElementById('studentSelection');
+                    if (studentSelection) {
+                        studentSelection.style.display = sendToAll && sendToAll.checked ? 'none' : 'block';
+                    }
+                }
 
-            if (selectAllButton) {
-                selectAllButton.addEventListener('click', function() {
-                    const checkboxes = document.querySelectorAll('.student-checkbox');
-                    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = !allChecked;
+                toggleStudentSelection();
+
+                if (sendToAll) {
+                    sendToAll.addEventListener('change', toggleStudentSelection);
+                }
+
+                if (selectAllButton) {
+                    selectAllButton.addEventListener('click', function() {
+                        const checkboxes = document.querySelectorAll('.student-checkbox');
+                        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = !allChecked;
+                        });
+                    });
+                }
+
+                $('input[name="send_option"]').on('change', function() {
+                    const selectedOption = $(this).val();
+
+                    if (selectedOption === 'selected') {
+                        $('#studentSelection').show(); // Hiện bảng chọn sinh viên
+                    } else {
+                        $('#studentSelection').hide(); // Ẩn bảng chọn sinh viên
+                    }
+                });
+
+                // Gán sự kiện cho các nút "Xem danh sách"
+                document.querySelectorAll('[data-notification-id]').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const notificationId = this.getAttribute('data-notification-id');
+                        showStudentList(notificationId);
                     });
                 });
-            }
 
-            $('input[name="send_option"]').on('change', function() {
-                const selectedOption = $(this).val();
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+                // Lắng nghe sự kiện thay đổi trên radio button
+                const sendToAll = document.getElementById('sendToAll');
+                const sendToGroup = document.getElementById('sendToGroup');
+                const sendToSelected = document.getElementById('sendToSelected');
+                const studentSelection = document.getElementById('studentSelection');
 
-                if (selectedOption === 'selected') {
-                    $('#studentSelection').show(); // Hiện bảng chọn sinh viên
-                } else {
-                    $('#studentSelection').hide(); // Ẩn bảng chọn sinh viên
+                // Hàm kiểm tra và ẩn/hiện danh sách sinh viên
+                function toggleStudentSelection() {
+                    if (sendToAll.checked) {
+                        studentSelection.style.display = 'none'; // Ẩn danh sách sinh viên khi chọn "Gửi Tất Cả"
+                    } else {
+                        studentSelection.style.display = 'block'; // Hiển thị danh sách sinh viên khi chọn "group" hoặc "selected"
+                    }
                 }
+
+                // Gọi hàm kiểm tra ngay khi tải trang
+                toggleStudentSelection();
+
+                // Lắng nghe sự thay đổi trên các radio button
+                sendToAll.addEventListener('change', toggleStudentSelection);
+                sendToGroup.addEventListener('change', toggleStudentSelection);
+                sendToSelected.addEventListener('change', toggleStudentSelection);
             });
+        </script>
 
-            // Gán sự kiện cho các nút "Xem danh sách"
-            document.querySelectorAll('[data-notification-id]').forEach(button => {
-                button.addEventListener('click', function() {
-                    const notificationId = this.getAttribute('data-notification-id');
-                    showStudentList(notificationId);
-                });
-            });
-            console.log(studentList); // Kiểm tra dữ liệu danh sách sinh viên
-
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lắng nghe sự kiện thay đổi trên radio button
-            const sendToAll = document.getElementById('sendToAll');
-            const sendToGroup = document.getElementById('sendToGroup');
-            const sendToSelected = document.getElementById('sendToSelected');
-            const studentSelection = document.getElementById('studentSelection');
-
-            // Hàm kiểm tra và ẩn/hiện danh sách sinh viên
-            function toggleStudentSelection() {
-                if (sendToAll.checked) {
-                    studentSelection.style.display = 'none'; // Ẩn danh sách sinh viên khi chọn "Gửi Tất Cả"
-                } else {
-                    studentSelection.style.display = 'block'; // Hiển thị danh sách sinh viên khi chọn "group" hoặc "selected"
+        <script>
+            function confirmDelete() {
+                if (confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')) {
+                    // Nếu người dùng xác nhận, tìm và nhấn nút xóa
+                    event.target.closest('form').submit();
                 }
             }
-
-            // Gọi hàm kiểm tra ngay khi tải trang
-            toggleStudentSelection();
-
-            // Lắng nghe sự thay đổi trên các radio button
-            sendToAll.addEventListener('change', toggleStudentSelection);
-            sendToGroup.addEventListener('change', toggleStudentSelection);
-            sendToSelected.addEventListener('change', toggleStudentSelection);
-        });
-    </script>
-
-    <script>
-        function confirmDelete() {
-            if (confirm('Bạn có chắc chắn muốn xóa tài khoản này không?')) {
-                // Nếu người dùng xác nhận, tìm và nhấn nút xóa
-                event.target.closest('form').submit();
-            }
-        }
-    </script>
-    <!-- Bootstrap JS  -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        </script>
+        <!-- Bootstrap JS  -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Registration;
 use App\Models\UnregisteredAttendance;
+use Illuminate\Support\Facades\Log;
 
 class AdminRegistrationController extends Controller
 {
@@ -19,16 +20,27 @@ class AdminRegistrationController extends Controller
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getPathname());
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
+            // Mảng để theo dõi các student_id đã xử lý
+            $processedEntries = [];
+
             // Xử lý dữ liệu từ file, kiểm tra sinh viên đã điểm danh
             foreach ($sheetData as $row) {
                 if (!isset($row[0]) || empty($row[0])) {
+                    continue; // Bỏ qua nếu không có student_id
+                }
+
+                $student_id = trim($row[0]); // Lấy student_id từ cột đầu tiên
+                $full_name = isset($row[1]) && !empty($row[1]) ? trim($row[1]) : 'Không xác định'; // Kiểm tra và lấy full_name
+                $email = isset($row[2]) && !empty($row[2]) ? trim($row[2]) : 'Không có email'; // Kiểm tra và lấy email
+                $phone = isset($row[3]) && !empty($row[3]) ? trim($row[3]) : 'Không có số điện thoại'; // Kiểm tra và lấy phone
+
+                // Bỏ qua nếu student_id đã được xử lý
+                if (isset($processedEntries[$student_id])) {
                     continue;
                 }
 
-                $student_id = $row[0];
-                $full_name = isset($row[1]) && !empty($row[1]) ? $row[1] : 'Không xác định'; // Chỉ đặt 'Không xác định' nếu không có trong file
-                $email = isset($row[2]) && !empty($row[2]) ? $row[2] : 'Không có email';     // Tương tự cho email
-                $phone = isset($row[3]) && !empty($row[3]) ? $row[3] : 'Không có số điện thoại'; // Tương tự cho phone
+                // Thêm student_id vào danh sách đã xử lý để tránh trùng lặp
+                $processedEntries[$student_id] = true;
 
                 // Tìm đăng ký trong hệ thống bằng student_id và activity_id
                 $registration = Registration::where('student_id', $student_id)
@@ -40,7 +52,7 @@ class AdminRegistrationController extends Controller
                     $registration->check = true;
                     $registration->save();
 
-                    // Lấy thêm thông tin từ bảng registrations (nếu tồn tại)
+                    // Lấy thông tin từ bảng registrations nếu tồn tại
                     $full_name = $registration->full_name ?: $full_name;
                     $email = $registration->email ?: $email;
                     $phone = $registration->phone ?: $phone;
@@ -50,13 +62,13 @@ class AdminRegistrationController extends Controller
                 UnregisteredAttendance::updateOrCreate(
                     [
                         'student_id' => $student_id,
-                        'activity_id' => $id,
+                        'activity_id' => $id, // Điều kiện để xác định bản ghi
                     ],
                     [
-                        'full_name' => $full_name,
+                        'full_name' => $full_name,  // Nếu tồn tại, cập nhật thông tin
                         'email' => $email,
                         'phone' => $phone,
-                        'batch' => 'Không xác định',
+                        'batch' => 'Không xác định', // Thiết lập batch mặc định nếu không có thông tin
                     ]
                 );
             }

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class AdminIssueController extends Controller
 {
@@ -133,28 +134,49 @@ class AdminIssueController extends Controller
 
     public function destroy($id)
     {
-        $notification = Notification::find($id);
+        $notification = Notification::with(['student', 'user'])->find($id);
 
         if (!$notification) {
             Log::error("Thông báo không tồn tại với ID: {$id}");
             return redirect()->back()->with('error', 'Thông báo không tồn tại!');
         }
 
+        // Nếu thông báo được gửi đến tất cả người dùng
         if ($notification->send_to_all) {
+            // Chỉ xóa bản ghi notification
             $notification->delete();
-            Log::info("Thông báo với ID: {$id} đã được xóa thành công.");
+            Log::info("Thông báo với ID: {$id} đã được xóa cho tất cả người nhận.");
         } else {
-            $user = $notification->user;
-
-            if ($user) {
-                Log::info("Thông báo với ID: {$id} đã được xóa thành công. Người nhận: {$user->name} ({$user->email})");
-            } else {
-                Log::info("Thông báo với ID: {$id} đã được xóa thành công. Không tìm thấy người nhận.");
-            }
-
+            // Nếu thông báo chỉ gửi cho một số người, vẫn xóa thông báo chung
             $notification->delete();
+            Log::info("Thông báo với ID: {$id} đã được xóa cho một số người nhận.");
         }
 
         return redirect()->back()->with('success', 'Thông báo đã được xóa thành công!');
+    }
+
+    public function destroyAll()
+    {
+        // Xóa tất cả thông báo có send_to_all = 1
+        $deletedCount = Notification::where('send_to_all', 1)->delete();
+
+        // Ghi log số lượng thông báo đã xóa
+        Log::info("Đã xóa {$deletedCount} thông báo được gửi tới tất cả người dùng.");
+
+        return redirect()->back()->with('success', "Đã xóa {$deletedCount} thông báo gửi tới tất cả người dùng thành công!");
+    }
+
+    // Phương thức đánh dấu thông báo là đã đọc
+    public function markAsRead($notificationId)
+    {
+        // Lấy thông báo từ cơ sở dữ liệu
+        $notification = Notification::findOrFail($notificationId);
+        
+        // Cập nhật trạng thái thông báo là đã đọc
+        $notification->is_read = true;
+        $notification->save();
+        
+        // Redirect lại trang thông báo
+        return redirect()->route('students.issues.index');
     }
 }

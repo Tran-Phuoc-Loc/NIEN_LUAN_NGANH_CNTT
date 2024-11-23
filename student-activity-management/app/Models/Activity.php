@@ -30,7 +30,13 @@ class Activity extends Model
 
     public function registrations()
     {
-        return $this->hasMany(Registration::class);
+        return $this->hasMany(Registration::class, 'activity_id');
+    }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'registrations', 'activity_id', 'student_id')
+                    ->withPivot('check', 'created_at', 'updated_at');
     }
 }
 

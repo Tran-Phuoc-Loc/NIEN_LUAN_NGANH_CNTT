@@ -3,52 +3,65 @@
 @section('content')
 
 <div class="container">
-    <h2 class="mb-4">Chào mừng, Admin!</h2>
+    <!-- Chào mừng -->
+    <h2 class="mb-4">Chào mừng, Admin!</h2> 
+        <!-- Button kích hoạt modal -->
+        <div class="text-end mb-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarouselModal">
+            Thêm ảnh vào carousel
+        </button>
+    </div>
+        
+    @if(session('success'))
+    <div class="alert alert-success mt-3">
+        {{ session('success') }}
+    </div>
+    @endif
 
-    <div class="grid">
-        <div class="row">
-            <!-- Thống kê tổng quan -->
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card shadow-sm border-0 text-center hover-card">
-                    <div class="card-body">
-                        <i class="fas fa-users fa-2x text-primary mb-2"></i>
-                        <h6 class="card-title">Tổng số người dùng</h6>
-                        <h2>{{ $totalMembers }}</h2>
-                    </div>
+    <!-- Thống kê tổng quan -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 text-center hover-card">
+                <div class="card-body">
+                    <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                    <h6 class="card-title">Tổng số người dùng</h6>
+                    <h2>{{ $totalMembers }}</h2>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card shadow-sm border-0 text-center hover-card">
-                    <div class="card-body">
-                        <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
-                        <h6 class="card-title">Tổng số hoạt động</h6>
-                        <h2>{{ $totalActivities }}</h2>
-                    </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 text-center hover-card">
+                <div class="card-body">
+                    <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
+                    <h6 class="card-title">Tổng số hoạt động</h6>
+                    <h2>{{ $totalActivities }}</h2>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card shadow-sm border-0 text-center hover-card">
-                    <div class="card-body">
-                        <i class="fas fa-check fa-2x text-primary mb-2"></i>
-                        <h6 class="card-title">Hoạt Động Hiện Có</h6>
-                        <h2>{{ $visibleActivitiesCount }}</h2>
-                    </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 text-center hover-card">
+                <div class="card-body">
+                    <i class="fas fa-check fa-2x text-primary mb-2"></i>
+                    <h6 class="card-title">Hoạt Động Hiện Có</h6>
+                    <h2>{{ $visibleActivitiesCount }}</h2>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 mb-4">
-                <div class="card shadow-sm border-0 text-center hover-card">
-                    <div class="card-body">
-                        <i class="fas fa-check fa-2x text-primary mb-2"></i>
-                        <h6 class="card-title">Tổng số Tin tức</h6>
-                        <h2>{{ $visibleActivitiesCount }}</h2>
-                    </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 text-center hover-card">
+                <div class="card-body">
+                    <i class="fas fa-check fa-2x text-primary mb-2"></i>
+                    <h6 class="card-title">Tổng số Tin tức</h6>
+                    <h2>{{ $visibleActivitiesCount }}</h2>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6 col-lg-3 mb-4">
+
+    <!-- Thông báo từ sinh viên và biểu đồ -->
+    <div class="row mb-4">
+        <!-- Thông báo từ sinh viên -->
+        <div class="col-md-6 col-lg-3">
             <div class="card shadow-sm border-0 text-center h-100">
                 <div class="card-header bg-warning text-white">
                     <h5>Thông báo từ sinh viên</h5>
@@ -78,8 +91,9 @@
                 </div>
             </div>
         </div>
-        <!-- Biểu đồ hoạt động không dùng card -->
-        <div class="col-md-9 mb-4">
+
+        <!-- Biểu đồ hoạt động -->
+        <div class="col-md-9">
             <div class="bg-secondary text-white text-center p-2 mb-2">
                 <h5>Biểu đồ hoạt động</h5>
             </div>
@@ -90,20 +104,52 @@
     </div>
 
     <!-- Hoạt động gần đây -->
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-info text-white text-center">
-                Hoạt động gần đây
-            </div>
-            <div class="card-content p-4">
-                @foreach($recentActivities as $activity)
-                <div class="activity-item mb-3">
-                    <h5>{{ $activity->name }}</h5>
-                    <p>Ngày diễn ra: {{ $activity->date->format('d/m/Y') }}</p>
-                    <p>Số người tham gia: {{ $activity->registrations_count }}</p>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white text-center">
+                    Hoạt động gần đây
                 </div>
-                @endforeach
-                <a href="{{ route('admin.activities.index') }}" class="btn btn-primary w-100">Xem tất cả hoạt động</a>
+                <div class="card-content p-4">
+                    @foreach($recentActivities as $activity)
+                    <div class="activity-item mb-3">
+                        <h5>{{ $activity->name }}</h5>
+                        <p>Ngày diễn ra: {{ $activity->date->format('d/m/Y') }}</p>
+                        <p>Số người tham gia: {{ $activity->registrations_count }}</p>
+                    </div>
+                    @endforeach
+                    <a href="{{ route('admin.activities.index') }}" class="btn btn-primary w-100">Xem tất cả hoạt động</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal thêm ảnh vào carousel -->
+    <div class="modal fade" id="addCarouselModal" tabindex="-1" aria-labelledby="addCarouselLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addCarouselLabel">Thêm ảnh vào carousel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.carousel.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Chọn ảnh:</label>
+                            <input type="file" name="images[]" id="images" class="form-control" multiple required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tiêu đề (tùy chọn):</label>
+                            <input type="text" name="title" id="title" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Mô tả (tùy chọn):</label>
+                            <textarea name="description" id="description" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Tải lên</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

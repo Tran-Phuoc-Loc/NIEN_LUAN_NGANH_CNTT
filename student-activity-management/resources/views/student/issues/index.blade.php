@@ -1,3 +1,5 @@
+<!-- resources/views/student/issues/index.blade.php -->
+
 @extends('layouts.student')
 
 @section('content')
@@ -10,22 +12,30 @@
     </div>
     @elseif (isset($notifications))
     @foreach ($notifications as $notification)
-    <div class="card mb-4 notification-card shadow-lg">
+    <div class="card mb-4 notification-card {{ $notification->is_read ? 'read' : 'unread' }} shadow-lg">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title d-flex align-items-center">
-                    <i class="
-                        @if($notification['type'] == 'success') fas fa-check-circle text-success
-                        @elseif($notification['type'] == 'error') fas fa-exclamation-circle text-danger
-                        @elseif($notification['type'] == 'warning') fas fa-exclamation-triangle text-warning
+                    <i class=" 
+                        @if($notification->type == 'success') fas fa-check-circle text-success
+                        @elseif($notification->type == 'error') fas fa-exclamation-circle text-danger
+                        @elseif($notification->type == 'warning') fas fa-exclamation-triangle text-warning
                         @else fas fa-info-circle text-info
                         @endif"></i>
-                    <span class="ml-2">{{ ucfirst($notification['type']) }} từ Admin</span>
+                    <span class="ml-2">{{ ucfirst($notification->type) }} từ Admin</span>
                 </h5>
-                <span class="text-muted">{{ $notification['created_at']->format('d/m/Y H:i') }}</span>
+                <span class="text-muted">{{ $notification->created_at->format('d/m/Y H:i') }}</span>
             </div>
             <hr>
-            <p class="card-text">{{ $notification['message'] }}</p>
+            <p class="card-text">{{ $notification->message }}</p>
+
+            <!-- Nút để đánh dấu là đã đọc -->
+            @if(!$notification->is_read)
+                <form action="{{ route('student.issues.markAsRead', $notification->id) }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Đánh dấu là đã đọc</button>
+                </form>
+            @endif
         </div>
     </div>
     @endforeach
@@ -35,11 +45,13 @@
     </div>
     @endif
 </div>
+
 <style>
     /* Đặt khung và hiệu ứng */
     .notification-card {
         border-left: 4px solid;
-        border-color: #17a2b8; /* Màu mặc định cho thông báo */
+        border-color: #17a2b8;
+        /* Màu mặc định cho thông báo */
         transition: all 0.3s ease-in-out;
     }
 
