@@ -7,7 +7,7 @@
     <div class="card-header bg-warning text-white text-center">
         Thông báo từ sinh viên
     </div>
-    <div class="card-content p-4">
+    <div class="card-body p-4">
         @if ($studentIssues->count() > 0)
         <ul class="list-group">
             @foreach ($studentIssues as $issue)
@@ -38,24 +38,28 @@
     <div class="card-header bg-info text-white text-center">
         Thông báo từ Admin
     </div>
-    <div class="card-content p-4">
+    <div class="card-body p-4">
         @if ($adminNotifications->count() > 0)
         <ul class="list-group">
             @foreach ($adminNotifications as $notification)
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Thông báo:</strong> {{ $notification->message }}
-                    <br><small>Gửi vào ngày: {{ $notification->created_at->format('d/m/Y H:i') }}</
-                            @if ($notification->total > 1)
-                        <br><small>Số lượng người nhận: {{ $notification->total }}</small>
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Thông báo:</strong> {{ $notification->message }}
+                        <br><small>Gửi vào ngày: {{ $notification->created_at->format('d/m/Y H:i') }}</small>
+                        <strong>Danh sách sinh viên nhận:</strong> {{ $notification->students->count() }} sinh viên nhận thông báo
+                    </div>
+                    <div>
+                        @if ($notification->students->isNotEmpty())
+                        <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#studentListModal" data-notification-id="{{ $notification->id }}">Xem danh sách</button>
                         @endif
+                        <form action="{{ route('admin.issues.destroy', $notification->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa thông báo này?')">Xóa</button>
+                        </form>
+                    </div>
                 </div>
-                <!-- Nút Xóa -->
-                <form action="{{ route('admin.issues.destroy', $notification->id) }}" method="POST" style="display:inline-block;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa thông báo này?')">Xóa</button>
-                </form>
             </li>
             @endforeach
         </ul>
@@ -66,7 +70,39 @@
         <p class="text-center">Không có thông báo từ Admin.</p>
         @endif
     </div>
+</div>
 
+<!-- Vòng lặp hiển thị thông báo từ Admin -->
+@foreach ($adminNotifications as $notification)
+    <!-- Modal cho danh sách sinh viên -->
+    <div class="modal fade" id="studentListModal{{ $notification->id }}" tabindex="-1" aria-labelledby="studentListModalLabel{{ $notification->id }}" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studentListModalLabel{{ $notification->id }}">Danh sách sinh viên nhận thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="student-list" id="studentList{{ $notification->id }}">
+                        <!-- Danh sách sinh viên sẽ được tạo động trong JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
 
-
-    @endsection
+@php
+    // Lấy danh sách sinh viên cho notificationId
+    $studentListData = $adminNotifications->keyBy('id')->map(function($notification) {
+        return [
+            'students' => $notification->students->map(function($student) {
+                return [
+                    'name' => $student->name,
+                    'email' => $student->email
+                ];
+            })->toArray()
+        ];
+    })->toArray();
+@endphp
+@endsection

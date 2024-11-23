@@ -24,8 +24,10 @@ class StudentController extends Controller
         $upcoming_activities = Activity::where('date', '>=', now())->get();
 
         // Lấy các thông báo cho người dùng hiện tại
-        $notifications = Notification::where('student_id', $user->id)->orderBy('created_at', 'desc')
+        $notifications = Notification::where('user_id', $user->id) // Sử dụng student_id của người dùng
+            ->orderBy('created_at', 'desc')
             ->get();
+
         // Khai báo mảng để lưu hoạt động mà sinh viên đã tham gia
         $participated_activities = [];
 
@@ -42,6 +44,8 @@ class StudentController extends Controller
             }
         }
 
+        Log::info('Notifications: ', $notifications->toArray());
+        Log::info('Current Student ID: ' . $user->id);
         // Log::info('Participated Activities: ', $participated_activities);
         // Log::info('Current User ID: ' . $user->id); // Kiểm tra ID sinh viên
         // Log::info('Registrations for User ID: ' . json_encode($participated_activities)); // In ra danh sách hoạt động đã tham gia

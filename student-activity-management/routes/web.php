@@ -35,7 +35,6 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->group(
     Route::get('admin/issues/{id}/resolve', [AdminIssueController::class, 'resolve'])->name('admin.issues.resolve');
     Route::delete('/admin/issues/{id}', [AdminIssueController::class, 'destroy'])->name('admin.issues.destroy');
 
-
     Route::get('/admin/activities', [AdminActivityController::class, 'index'])->name('admin.activities.index');
     Route::get('/admin/activities/create', [AdminActivityController::class, 'create'])->name('admin.activities.create');
     Route::post('/admin/activities', [AdminActivityController::class, 'store'])->name('admin.activities.store');

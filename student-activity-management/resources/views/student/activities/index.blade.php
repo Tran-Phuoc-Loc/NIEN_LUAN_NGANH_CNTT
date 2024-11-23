@@ -4,6 +4,14 @@
 <div class="container my-5">
     <h2 class="text-center mb-4">Danh sách các hoạt động</h2>
 
+    <!-- Thanh tìm kiếm -->
+    <form method="GET" action="{{ route('activities.index') }}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" value="{{ old('search', $searchTerm) }}" class="form-control" placeholder="Tìm kiếm hoạt động..." />
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+
     @if($activities->isEmpty())
     <div class="alert alert-info">Hiện tại không có hoạt động nào.</div>
     @else

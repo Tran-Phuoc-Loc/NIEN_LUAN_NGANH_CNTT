@@ -30,6 +30,10 @@ class Student extends Model
         return $this->hasMany(Registration::class, 'user_id', 'id');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'user_id'); // user_id trong students liên kết với user_id trong notifications
+    }
     // protected $dates = ['joining_date'];
 
     // public function setJoiningDateAttribute($value)

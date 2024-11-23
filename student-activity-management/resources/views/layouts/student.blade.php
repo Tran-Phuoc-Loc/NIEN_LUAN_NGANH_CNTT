@@ -11,34 +11,48 @@
 </head>
 
 <body>
+    <!-- Header -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark ">
+            <div class="container">
+                <!-- Logo Thương Hiệu -->
                 <a class="navbar-brand" href="#">Tham gia Hoạt động Đoàn/Hội</a>
+                
+                <!-- Nút toggle cho menu trên màn hình nhỏ -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                
+                <!-- Các liên kết điều hướng -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <!-- Trang chủ -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('student.dashboard') }}">Trang chủ</a>
+                            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Trang chủ</a>
                         </li>
+                        <!-- Hoạt động -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('activities.index') }}">Hoạt động</a>
+                            <a class="nav-link active" href="{{ route('activities.index') }}">Hoạt động</a>
                         </li>
+                        <!-- Thông báo -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('student.issues.index') }}">Thông báo</a>
+                            <a class="nav-link active" href="{{ route('student.issues.index') }}">Thông báo</a>
                         </li>
+                        <!-- Tin tức -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('student.news.index') }}">Tin Tức</a>
+                            <a class="nav-link active" href="{{ route('student.news.index') }}">Tin Tức</a>
                         </li>
+                        <!-- Kiểm tra xem người dùng đã đăng nhập chưa -->
                         @auth
+                        <!-- Thông tin cá nhân -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('profile.show') }}">Thông tin cá nhân</a>
+                            <a class="nav-link active" href="{{ route('profile.show') }}">Thông tin cá nhân</a>
                         </li>
+                        <!-- Đăng xuất -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                            <a class="nav-link active" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </li>
+                        <!-- Form đăng xuất ẩn -->
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>

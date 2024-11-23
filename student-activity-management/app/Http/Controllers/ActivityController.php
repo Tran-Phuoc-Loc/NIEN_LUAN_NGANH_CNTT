@@ -7,13 +7,19 @@ use App\Models\Activity;
 
 class ActivityController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Lấy từ khóa tìm kiếm từ request
+        $searchTerm = $request->input('search');
+
         // Lấy 10 hoạt động mỗi trang, sắp xếp theo ngày và không bị ẩn
         $activities = Activity::where('is_hidden', 0) // Chỉ lấy những hoạt động không bị ẩn
+            ->when($searchTerm, function ($query, $searchTerm) {
+                return $query->where('name', 'like', '%' . $searchTerm . '%');
+            })
             ->orderBy('date', 'desc')
             ->paginate(10);
-        return view('student.activities.index', compact('activities'));
+        return view('student.activities.index', compact('activities', 'searchTerm'));
     }
 
     public function show($id)

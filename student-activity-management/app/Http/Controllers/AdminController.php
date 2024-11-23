@@ -23,10 +23,15 @@ class AdminController extends Controller
         $visibleActivitiesCount = Activity::where('is_hidden', 0)->count(); // Đếm số hoạt động không ẩn
         $recentActivities = Activity::withCount('registrations')->latest()->take(3)->get();
         $studentIssues = StudentIssue::orderBy('created_at', 'desc')->take(5)->get();
-
-
-        return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities', 'studentIssues'));
+    
+        // Lấy dữ liệu cho biểu đồ hoạt động
+        $activities = Activity::withCount('registrations')->get(); // Lấy tất cả hoạt động cùng với số lượng người tham gia
+        $activityData = $activities->pluck('registrations_count'); // Lấy số lượng người tham gia
+        $activityLabels = $activities->pluck('name'); // Lấy tên hoạt động
+    
+        return view('admin.dashboard', compact('totalMembers', 'totalActivities', 'visibleActivitiesCount', 'recentActivities', 'studentIssues', 'activityData', 'activityLabels'));
     }
+    
 
     // Hiển thị form thêm sinh viên
     public function create()
