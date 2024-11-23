@@ -209,7 +209,7 @@ class AdminController extends Controller
         $participatedActivities = DB::table('unregistered_attendances as ua')
             ->join('activities as a', 'ua.activity_id', '=', 'a.id')
             ->where('ua.student_id', $studentId)
-            ->select('ua.*', 'a.name as activity_name', 'a.date as activity_date', 'a.description') // Thêm description
+            ->select('ua.*', 'a.name as activity_name', 'a.date as activity_date', 'a.description', 'a.is_hidden') // Thêm description
             ->get();
 
 
@@ -219,6 +219,7 @@ class AdminController extends Controller
                 'activity_name' => $activity->activity_name,
                 'activity_date' => $activity->activity_date,
                 'description' => $activity->description,
+                'is_hidden' => $activity->is_hidden, // Lấy trạng thái hoạt động
             ];
         })->toArray();
 

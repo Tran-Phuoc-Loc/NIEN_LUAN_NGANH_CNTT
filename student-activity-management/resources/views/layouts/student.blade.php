@@ -58,7 +58,7 @@
                                             @if($user && $user->student && $user->student->avatar)
                                             <img src="{{ asset('storage/' . $user->student->avatar) }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
                                             @else
-                                            <img src="{{ asset('storage/students/avatars/defaultavatar.png') }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
+                                            <img src="{{ asset('storage/students/avatars/default_avatar.png') }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
                                             @endif
                                         </div>
                                     </a>

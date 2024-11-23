@@ -32,6 +32,7 @@
                 <th>#</th>
                 <th>Tên hoạt động</th>
                 <th>Mô tả</th>
+                <th>Trạng thái</th>
                 <th>Ngày tổ chức</th>
             </tr>
         </thead>
@@ -41,6 +42,13 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $activity->activity_name }}</td>
                 <td>{{ $activity->description }}</td>
+                <td>
+                    @if ($activity->is_hidden)
+                        <span class="badge bg-warning">Ẩn</span>
+                    @else
+                        <span class="badge bg-success">Hiển thị</span>
+                    @endif
+                </td>
                 <td>{{ \Carbon\Carbon::parse($activity->activity_date)->format('d/m/Y') }}</td>
             </tr>
             @endforeach

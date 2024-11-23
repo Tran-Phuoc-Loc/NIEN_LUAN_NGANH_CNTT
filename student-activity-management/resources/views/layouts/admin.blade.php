@@ -159,7 +159,7 @@
                     <!-- Thông tin người dùng -->
                     <div class="user-info text-center mb-4">
                         @if(auth()->check())
-                        <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('storage/students/avatars/default_avatar.png') }}"
+                        <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('storage/students/avatars/admin_icon.png') }}"
                             alt="Profile of {{ auth()->user()->username }}"
                             class="rounded-circle" style="width: 70px; height: 75px;">
                         <h5 class="mt-2 text-white">{{ auth()->user()->username }}</h5>
