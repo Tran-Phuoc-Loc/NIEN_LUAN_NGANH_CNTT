@@ -1,5 +1,3 @@
-<!-- resources/views/student/issues/index.blade.php -->
-
 @extends('layouts.student')
 
 @section('content')
@@ -12,7 +10,7 @@
     </div>
     @elseif (isset($notifications))
     @foreach ($notifications as $notification)
-    <div class="card mb-4 notification-card {{ $notification->is_read ? 'read' : 'unread' }} shadow-lg">
+    <div class="card mb-4 notification-card {{ $notification->is_read ? 'read' : 'unread' }} shadow-sm border-left-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="card-title d-flex align-items-center">
@@ -31,10 +29,10 @@
 
             <!-- Nút để đánh dấu là đã đọc -->
             @if(!$notification->is_read)
-                <form action="{{ route('student.issues.markAsRead', $notification->id) }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-sm btn-outline-primary">Đánh dấu là đã đọc</button>
-                </form>
+            <form action="{{ route('student.issues.markAsRead', $notification->id) }}" method="POST" class="d-inline-block">
+                @csrf
+                <button type="submit" class="btn btn-outline-primary btn-sm">Đánh dấu là đã đọc</button>
+            </form>
             @endif
         </div>
     </div>
@@ -46,43 +44,44 @@
     @endif
 </div>
 
+<!-- Styles -->
 <style>
     /* Đặt khung và hiệu ứng */
     .notification-card {
-        border-left: 4px solid;
-        border-color: #17a2b8;
-        /* Màu mặc định cho thông báo */
-        transition: all 0.3s ease-in-out;
+        transition: transform 0.3s ease, background-color 0.3s ease;
     }
 
     /* Màu sắc theo loại thông báo */
     .notification-card .fa-check-circle {
-        border-color: #28a745;
+        border-left: 4px solid #28a745;
     }
 
     .notification-card .fa-exclamation-circle {
-        border-color: #dc3545;
+        border-left: 4px solid #dc3545;
     }
 
     .notification-card .fa-exclamation-triangle {
-        border-color: #ffc107;
+        border-left: 4px solid #ffc107;
     }
 
-    /* Hiệu ứng hover */
+    .notification-card .fa-info-circle {
+        border-left: 4px solid #17a2b8;
+    }
+
     .notification-card:hover {
-        transform: scale(1.03);
+        transform: scale(1.02);
         background-color: #f8f9fa;
     }
 
     /* Định dạng tiêu đề */
     .card-title {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         font-weight: bold;
     }
 
     /* Căn chỉnh nội dung */
     .card-text {
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin-top: 1rem;
     }
 
@@ -92,8 +91,7 @@
         margin-right: 10px;
     }
 
-    /* Định dạng khoảng cách */
-    .notification-card .ml-2 {
+    .ml-2 {
         margin-left: 10px;
     }
 </style>

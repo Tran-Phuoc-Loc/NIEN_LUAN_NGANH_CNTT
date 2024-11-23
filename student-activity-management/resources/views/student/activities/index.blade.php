@@ -64,17 +64,23 @@
                     </td>
 
                     <td>
-                        @if($activity->registration_start && $activity->registration_start <= now() && $activity->registration_end && $activity->registration_end >= now())
-                            <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-primary">Đăng ký tham gia</a>
-                            @else
-                            <button class="btn btn-secondary" disabled>
-                                @if($activity->registration_start && $activity->registration_start > now())
-                                Chưa đến thời gian đăng ký
-                                @else
-                                Hết hạn đăng ký
-                                @endif
-                            </button>
-                            @endif
+                        @php
+                        $registeredCount = $activity->registrations()->count();
+                        @endphp
+
+                        @if($registeredCount < $activity->max_participants && $activity->registration_start && $activity->registration_start <= now() && $activity->registration_end && $activity->registration_end >= now())
+                                <!-- Nếu còn slot đăng ký và trong thời gian đăng ký -->
+                                <a href="{{ route('registrations.create', ['id' => $activity->id]) }}" class="btn btn-primary">Đăng ký tham gia</a>
+                                @elseif($registeredCount >= $activity->max_participants)
+                                <!-- Nếu số lượng người đăng ký đã đầy -->
+                                <button class="btn btn-secondary" disabled>Đã đủ số người đăng ký</button>
+                                @elseif($activity->registration_end && $activity->registration_end < now())
+                                    <!-- Nếu đã hết hạn đăng ký -->
+                                    <button class="btn btn-secondary" disabled>Hết hạn đăng ký</button>
+                                    @elseif($activity->registration_start && $activity->registration_start > now())
+                                    <!-- Nếu chưa đến thời gian đăng ký -->
+                                    <button class="btn btn-secondary" disabled>Chưa đến thời gian đăng ký</button>
+                                    @endif
                     </td>
                 </tr>
                 @endforeach

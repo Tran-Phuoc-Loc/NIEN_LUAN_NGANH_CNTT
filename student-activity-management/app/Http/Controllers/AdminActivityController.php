@@ -12,13 +12,19 @@ class AdminActivityController extends Controller
     // Hiển thị danh sách các hoạt động cho admin quản lý
     public function index(Request $request)
     {
+        // Khởi tạo truy vấn cơ bản
         $query = Activity::query();
 
         // Kiểm tra nếu có từ khóa tìm kiếm
         if ($request->has('search') && $request->search != '') {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-        $activities = $query->paginate(10); // Hiển thị 10 hoạt động mỗi trang
+
+        // Thêm đếm số lượng người đăng ký
+        $activities = $query->withCount('registrations') // Đếm số người đăng ký
+            ->paginate(10); // Hiển thị 10 hoạt động mỗi trang
+
+        // Trả về view với dữ liệu đã phân trang
         return view('admin.activities.index', compact('activities'));
     }
 
@@ -46,11 +52,15 @@ class AdminActivityController extends Controller
             'benefits' => 'required|string',
             'registration_start' => 'required|date',
             'registration_end' => 'required|date|after_or_equal:registration_start',
+            'max_participants' => 'required|integer|min:0',
         ]);
 
         $activity = Activity::findOrFail($id);
+
+        // Cập nhật hoạt động với dữ liệu đã xác thực
         $activity->update($validatedData);
 
+        // Thông báo và chuyển hướng về trang danh sách hoạt động
         return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được cập nhật thành công!');
     }
 
@@ -65,10 +75,13 @@ class AdminActivityController extends Controller
             'benefits' => 'required|string',
             'registration_start' => 'required|date',
             'registration_end' => 'required|date|after_or_equal:registration_start',
+            'max_participants' => 'required|integer|min:0',
         ]);
 
-        Activity::create($validatedData);
+        // Tạo mới hoạt động
+        $activity = Activity::create($validatedData);
 
+        // Thông báo và chuyển hướng về trang danh sách hoạt động
         return redirect()->route('admin.activities.index')->with('success', 'Hoạt động đã được thêm thành công!');
     }
 

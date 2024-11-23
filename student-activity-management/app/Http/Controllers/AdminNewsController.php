@@ -53,7 +53,7 @@ class AdminNewsController extends Controller
         // Lưu tin tức
         $news = new News();
         $news->title = $request->title;
-        $news->content = $request->content;
+        $news->content = str_replace('<!--break-->', '{{!--break--}}', $request->content); // Thay thế <!--break--> trước khi lưu
 
         // Lưu ảnh minh họa
         if ($request->hasFile('image')) {
@@ -78,12 +78,13 @@ class AdminNewsController extends Controller
     }
 
 
-
     // Hiển thị form chỉnh sửa tin tức
     public function edit($id)
     {
         $news = News::findOrFail($id);
-        return view('admin.news.edit', compact('news'));
+        // Lấy các ảnh phụ đã lưu
+        $additionalImages = NewsImage::where('news_id', $news->id)->get();
+        return view('admin.news.edit', compact('news', 'additionalImages'));
     }
 
     // Cập nhật tin tức
@@ -91,24 +92,44 @@ class AdminNewsController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'content' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Ảnh bổ sung
         ]);
 
+        // Tìm tin tức cần cập nhật
         $news = News::findOrFail($id);
         $news->title = $validated['title'];
-        $news->content = $validated['content'];
+        $news->content = str_replace('<!--break-->', '{{!--break--}}', $validated['content']); // Thay thế <!--break--> trước khi lưu
 
-        // Nếu có ảnh mới được tải lên
+        // Nếu có ảnh mới được tải lên (ảnh chính)
         if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu tồn tại
+            if ($news->image) {
+                Storage::disk('public')->delete($news->image);
+            }
+
+            // Lưu ảnh mới
             $imagePath = $request->file('image')->store('news_images', 'public');
             $news->image = $imagePath;
         }
 
         $news->save();
 
-        return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được cập nhật thành công.');
+        // Xử lý cập nhật các ảnh bổ sung
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $imagePath = $file->store('news_images', 'public');
+                $newsImage = new NewsImage();
+                $newsImage->news_id = $news->id;
+                $newsImage->image_path = $imagePath;
+                $newsImage->save();
+            }
+        }
+
+        return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được cập nhật thành công!');
     }
+
     // Phương thức xóa tin tức
     public function destroy($id)
     {

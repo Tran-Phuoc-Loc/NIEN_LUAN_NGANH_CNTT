@@ -69,7 +69,7 @@
                         @endif
                     </div>
                     @endforeach
-                    <a href="{{ route('activities.index') }}" class="btn btn-link text-success d-block text-center mt-3">Xem tất cả</a>
+                    <a href="{{ route('activities.index') }}" class="btn btn-link d-block text-center mt-3">Xem tất cả</a>
                     @endif
 
                 </div>

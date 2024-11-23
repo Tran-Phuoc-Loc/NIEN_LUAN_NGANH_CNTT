@@ -90,7 +90,7 @@
     </button>
 
     <!-- Form -->
-    <div id="issueForm" class="card shadow-sm p-4" style="display: none; position: fixed; bottom: 80px; right: 20px; z-index: 1000; width: 300px;">
+    <div id="issueForm" class="card shadow-sm p-4" style="display: none; position: fixed; bottom: 100px; right: 50px; z-index: 1000; width: 300px;">
         <h5 class="card-title mb-3">Gửi thắc mắc của bạn</h5>
         <form action="{{ route('student.issues.store') }}" method="POST">
             @csrf

@@ -228,7 +228,6 @@ class AdminController extends Controller
     }
 
 
-    // Hiển thị danh sách người dùng
     public function showUsers(Request $request)
     {
         $query = User::query();
@@ -245,13 +244,15 @@ class AdminController extends Controller
         // Kiểm tra nếu người dùng hiện tại là admin chủ
         if (Auth::user()->is_super_admin) {
             // Nếu là admin chủ, lấy tất cả người dùng bao gồm cả admin chủ
-            $users = $query->orderByRaw("role = 'admin' DESC")->get();
+            $query->orderByRaw("role = 'admin' DESC");
         } else {
             // Nếu không phải admin chủ, loại trừ admin chủ
-            $users = $query->where('is_super_admin', false)
-                ->orderByRaw("role = 'admin' DESC")
-                ->get();
+            $query->where('is_super_admin', false)
+                ->orderByRaw("role = 'admin' DESC");
         }
+
+        // Phân trang với 10 người dùng mỗi trang
+        $users = $query->paginate(10);
 
         return view('admin.managers.index', compact('users'));
     }

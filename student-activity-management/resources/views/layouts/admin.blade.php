@@ -62,7 +62,6 @@
         background: #1e88e5;
         padding: 10px 20px;
         text-align: center;
-        margin-top: 10px;
     }
 
     .btn:hover {

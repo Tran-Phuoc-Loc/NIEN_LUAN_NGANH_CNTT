@@ -2,72 +2,70 @@
 
 @section('content')
 <div class="container">
-    <h1>Quản lý Tin Tức</h1>
+    <h1 class="mb-4">Quản lý Tin Tức</h1>
 
-    <!-- Thông tin số lượng bài viết -->
-    <div class="mb-3">
-        <p>Tổng số tin tức: <strong>{{ $newsList->total() }}</strong></p>
+    <!-- Thông tin tổng quát -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <p class="mb-0">Tổng số tin tức: <strong>{{ $newsList->total() }}</strong></p>
+        <a href="{{ route('admin.news.create') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Tạo Tin tức
+        </a>
     </div>
 
-    <!-- Thanh tìm kiếm -->
-    <form action="{{ route('admin.news.index') }}" method="GET" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm tin tức..." value="{{ request('search') }}">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="submit">Tìm kiếm</button>
-            </div>
+    <!-- Thanh tìm kiếm và bộ lọc -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('admin.news.index') }}" method="GET" class="row g-3 align-items-end">
+                <!-- Tìm kiếm -->
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Tìm kiếm</label>
+                    <input type="text" name="search" id="search" class="form-control" placeholder="Tìm kiếm tin tức..." value="{{ request('search') }}">
+                </div>
+                <!-- Bộ lọc ngày -->
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Ngày Bắt Đầu</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">Ngày Kết Thúc</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                </div>
+                <!-- Nút lọc -->
+                <div class="col-md-2 text-end">
+                    <button type="submit" class="btn btn-secondary w-100">
+                        <i class="fas fa-filter"></i> Lọc
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
-
-    <!-- Bộ lọc theo ngày -->
-    <form action="{{ route('admin.news.index') }}" method="GET" class="mb-4">
-        <div class="form-row">
-            <div class="col">
-                <p>Ngày Bắt Đầu</p>
-                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
-            </div>
-            <div class="col">
-                <p>Ngày Kết Thúc</p>
-                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
-            </div>
-            <div class="col">
-                <button type="submit" class="btn btn-secondary">Lọc</button>
-            </div>
-        </div>
-    </form>
-
-    <!-- Nút tạo tin tức -->
-    <div class="d-flex justify-content-end mb-3">
-        <a href="{{ route('admin.news.create') }}" class="btn btn-success">Tạo Tin tức</a>
     </div>
 
-    <!-- Hiển thị thông báo thành công -->
+    <!-- Thông báo -->
     @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
     @endif
 
-    <div class="row">
-        @foreach($newsList as $news)
-        <div class="col-md-12 mb-4">
-            <div class="card p-3">
-                <div class="row no-gutters align-items-center">
-                    <!-- Cột chứa ảnh, điều chỉnh kích thước ảnh -->
-                    <div class="col-md-3">
-                        <img src="{{ asset('storage/' . $news->image) }}" class="img-fluid" alt="{{ $news->title }}" style="max-height: 150px;">
+    <!-- Danh sách tin tức -->
+    <div class="row g-4">
+        @forelse($newsList as $news)
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="row g-0 align-items-center">
+                    <!-- Hình ảnh -->
+                    <div class="col-md-4">
+                        <img src="{{ asset('storage/' . $news->image) }}" class="img-fluid rounded-start" alt="{{ $news->title }}" style="object-fit: cover; height: 100%;">
                     </div>
-
-                    <!-- Cột chứa tiêu đề, nội dung và thao tác -->
-                    <div class="col-md-9">
+                    <!-- Nội dung -->
+                    <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">{{ $news->title }}</h5>
-                            <p class="card-text">{{ Str::limit($news->content, 100) }}</p>
+                            <p class="card-text text-truncate">{{ Str::limit(str_replace('<!--break-->', '', $news->content), 40) }}</p>
                             <p class="text-muted">Đăng lúc: {{ $news->created_at->isoFormat('DD/MM/YYYY HH:mm') }}</p>
-
-                            <!-- Các nút thao tác -->
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a href="{{ route('admin.news.edit', $news->id) }}" class="btn btn-primary btn-sm">
+                            <!-- Thao tác -->
+                            <div class="d-flex">
+                                <a href="{{ route('admin.news.edit', $news->id) }}" class="btn btn-primary btn-sm me-2">
                                     <i class="fas fa-edit"></i> Chỉnh sửa
                                 </a>
                                 <form action="{{ route('admin.news.destroy', $news->id) }}" method="POST" class="d-inline">
@@ -83,24 +81,46 @@
                 </div>
             </div>
         </div>
-        @endforeach
+        @empty
+        <p class="text-center text-muted">Không có tin tức nào phù hợp.</p>
+        @endforelse
     </div>
 
     <!-- Phân trang -->
-    <div class="d-flex justify-content-center">
-        {{ $newsList->onEachSide(1)->links() }} <!-- Hiển thị phân trang với số trang gần bên -->
+    <div class="d-flex justify-content-center mt-4">
+        {{ $newsList->onEachSide(1)->links() }}
     </div>
-
 </div>
+
 <style>
-    .btn-group .btn {
-        margin-right: 5px;
-        /* Thêm khoảng cách giữa các nút */
+    .card-body h5 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
     }
 
-    .btn:hover {
-        opacity: 0.8;
-        /* Thêm hiệu ứng hover cho nút */
+    .btn-sm {
+        font-size: 0.9rem;
+    }
+
+    .text-truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card img {
+        border-radius: 0.25rem;
+    }
+
+    .card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 </style>
 @endsection

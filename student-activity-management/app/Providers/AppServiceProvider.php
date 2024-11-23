@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Notification;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,5 +32,7 @@ class AppServiceProvider extends ServiceProvider
         View::share('user', $user);
         $notifications = Notification::all(); // Hoặc truy vấn theo yêu cầu của bạn
         View::share('notifications', $notifications);
+
+        Paginator::useBootstrap();
     }
 }
