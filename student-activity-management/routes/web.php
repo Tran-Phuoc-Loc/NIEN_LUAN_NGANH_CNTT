@@ -16,6 +16,8 @@ use App\Http\Controllers\AdminActivityController;
 use App\Http\Controllers\AdminIssueController;
 use App\Http\Controllers\AdminRegistrationController;
 use App\Http\Controllers\AdminCarouselController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 
 // Route cho login
@@ -101,6 +103,13 @@ Route::middleware('auth')->group(function () {
     // Route cho hoạt động
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show'); // Route để hiển thị chi tiết một hoạt động cụ thể
+
+    Route::resource('posts', PostController::class);    
+    // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    // Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    // Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+
 });
 
 // Route cho trang chính của ứng dụng (không yêu cầu auth)

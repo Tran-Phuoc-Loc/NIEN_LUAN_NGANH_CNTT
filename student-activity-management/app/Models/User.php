@@ -28,7 +28,7 @@ class User extends Authenticatable
     // Mối quan hệ với bảng students 
     public function student()
     {
-        return $this->hasOne(Student::class, 'user_id');// Liên kết đến bảng students qua user_id
+        return $this->hasOne(Student::class, 'user_id'); // Liên kết đến bảng students qua user_id
     }
 
     public function registrations()
@@ -44,5 +44,10 @@ class User extends Authenticatable
         static::deleting(function ($user) {
             $user->student()->delete();  // Xóa student liên quan
         });
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class); // Quan hệ một-nhiều (1 User có nhiều Post)
     }
 }

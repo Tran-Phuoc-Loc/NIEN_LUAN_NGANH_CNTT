@@ -35,6 +35,10 @@
                         <li class="nav-item">
                             <a class="nav-link {{ Request::routeIs('activities.index') ? 'active' : '' }}" href="{{ route('activities.index') }}">Hoạt động</a>
                         </li>
+                        <!-- Hoạt động -->
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::routeIs('posts.index') ? 'active' : '' }}" href="{{ route('posts.index') }}">Bài viết</a>
+                        </li>
 
                         <!-- Thông báo -->
                         <li class="nav-item">
@@ -55,11 +59,12 @@
                                 <li class="nav-item dropdown ms-3">
                                     <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <div class="user-circle">
-                                            @if($user && $user->student && $user->student->avatar)
-                                            <img src="{{ asset('storage/' . $user->student->avatar) }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
+                                            @if(auth()->check() && auth()->user()->student && auth()->user()->student->avatar)
+                                            <img src="{{ asset('storage/' . auth()->user()->student->avatar) }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
                                             @else
-                                            <img src="{{ asset('storage/students/avatars/default_avatar.png') }}" alt="Ảnh đại diện" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
+                                            <img src="{{ asset('storage/students/avatars/default_avatar.png') }}" alt="Ảnh mặc định" class="img-fluid" style="border-radius: 50%; width: 45px; height: 45px;" loading="lazy">
                                             @endif
+
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
