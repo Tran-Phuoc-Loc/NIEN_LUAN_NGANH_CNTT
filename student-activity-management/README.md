@@ -17,11 +17,24 @@
 1. **Clone repository**:
    ```bash
    git clone https://github.com/Tran-Phuoc-Loc/NIEN_LUAN_NGANH_CNTT.git
-   cd student-activity-management 
+   ```
+   ```bash
+   cd student-activity-management
+   
 2. **Cài đặt các phụ thuộc PHP**:
    - **Hướng dẫn**: Cần cài đặt Composer để chạy được [tải Composer chính thức ở đây](https://getcomposer.org/download/) bạn có thể tìm hiểu thêm về Composer.
    ```bash
    composer install
+   
+     ```
+
+3. **Cập nhật các gói phụ thuộc (tuỳ chọn)**  
+   - Nếu cần cập nhật các gói phụ thuộc lên phiên bản mới nhất, sử dụng lệnh:
+
+   ```bash
+   composer update
+   ```
+     
 4. **Cài đặt JavaScript**:
    - **Hướng dẫn**: Cần cài đặt Node.js để chạy được [tải Node.js chính thức ở đây](https://nodejs.org/en) bạn có thể tìm hiểu thêm về Node.js.
     - Sau đó chạy lệnh bên dưới
@@ -49,10 +62,10 @@ QUEUE_CONNECTION=database
 9. **Tạo key ứng dụng**:
    ```bash
    php artisan key:generate
-11. **Chạy ứng dụng**:
+10. **Chạy ứng dụng**:
    ```bash
-   php artisan serve
-``` 
+       php artisan serve
+   ``` 
 ## Sử dụng
 
 -
