@@ -24,8 +24,11 @@ class StudentController extends Controller
         // Thay vì lấy ID, lấy student_id
         $studentId = $user->student_id; // Giả sử trường này lưu student_id là MSV2
 
-        // Lấy danh sách hoạt động sắp tới từ bảng 'activities'
-        $upcoming_activities = Activity::where('date', '>=', now())->get();
+        // Lấy danh sách hoạt động sắp tới từ bảng 'activities' và loại bỏ các hoạt động bị ẩn
+        $upcoming_activities = Activity::where('date', '>=', now())
+            ->where('is_hidden', false) // Loại bỏ các hoạt động bị ẩn
+            ->get();
+
 
         // Lấy các thông báo cho người dùng hiện tại
         $notifications = Notification::where('user_id', $user->id) // Sử dụng student_id của người dùng

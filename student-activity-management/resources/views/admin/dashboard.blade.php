@@ -8,7 +8,7 @@
         <!-- Button kích hoạt modal -->
         <div class="text-end mb-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarouselModal">
-            Thêm ảnh vào carousel
+            Thêm ảnh vào trang người dùng
         </button>
     </div>
         
@@ -170,55 +170,79 @@ $activityDataJson = json_encode([]); // Mảng rỗng
 <script>
     $(document).ready(function() {
         // Biến dữ liệu biểu đồ hoạt động
-        var activityLabels = JSON.parse('{!! $activityLabelsJson !!}');
+        var activityLabels = JSON.parse(@json($activityLabelsJson));
         var activityData = JSON.parse('{!! $activityDataJson !!}');
+        console.log('Raw activityLabelsJson:', '{!! $activityLabelsJson !!}');
+
 
         // Lấy context của canvas cho biểu đồ
-        var ctx = $('#activityChart');
+    var ctx = $('#activityChart');
 
-        // Kiểm tra nếu phần tử canvas tồn tại trước khi tạo biểu đồ
-        if (ctx.length) {
-            var activityChart = new Chart(ctx, {
-                type: 'bar', // Loại biểu đồ
-                data: {
-                    labels: activityLabels, // Sử dụng biến JavaScript đã được truyền
-                    datasets: [{
-                        label: 'Số người tham gia',
-                        data: activityData, // Sử dụng biến JavaScript đã được truyền
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)', // Màu nền
-                        borderColor: 'rgba(54, 162, 235, 1)', // Màu viền
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top', // Vị trí của chú thích biểu đồ
-                        },
+// Kiểm tra nếu phần tử canvas tồn tại và dữ liệu hợp lệ
+if (ctx.length && activityLabels.length && activityData.length) {
+    try {
+        var totalParticipants = activityData.reduce((a, b) => a + b, 0); // Tính tổng số người tham gia
+
+        // Khởi tạo biểu đồ
+        var activityChart = new Chart(ctx, {
+            type: 'bar', // Loại biểu đồ
+            data: {
+                labels: activityLabels, // Sử dụng biến JavaScript đã được truyền
+                datasets: [{
+                    label: 'Số người tham gia',
+                    data: activityData, // Sử dụng biến JavaScript đã được truyền
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Màu nền
+                    borderColor: 'rgba(54, 162, 235, 1)', // Màu viền
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Số người tham gia theo hoạt động'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    var total = activityData.reduce((a, b) => a + b, 0);
-                                    var currentValue = tooltipItem.raw;
-                                    var percentage = Math.floor((currentValue / total) * 100); // Tính phần trăm
-                                    return `${tooltipItem.label}: ${currentValue} (${percentage}%)`;
-                                }
+                            text: 'Số lượng' // Tiêu đề trục Y
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Hoạt động' // Tiêu đề trục X
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top', // Vị trí của chú thích biểu đồ
+                    },
+                    title: {
+                        display: true,
+                        text: 'Số người tham gia theo hoạt động' // Tiêu đề biểu đồ
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                // Lấy giá trị hiện tại và tính phần trăm
+                                var currentValue = tooltipItem.raw;
+                                var percentage = totalParticipants
+                                    ? ((currentValue / totalParticipants) * 100).toFixed(2) // Phần trăm 2 chữ số thập phân
+                                    : 0;
+                                return `${tooltipItem.label}: ${currentValue} (${percentage}%)`;
                             }
                         }
                     }
                 }
-            });
-        }
+            }
+        });
+    } catch (error) {
+        console.error('Lỗi khi tạo biểu đồ:', error.message);
+    }
+} else {
+    console.warn('Dữ liệu hoặc canvas không hợp lệ.');
+}
+
     });
 </script>
 
